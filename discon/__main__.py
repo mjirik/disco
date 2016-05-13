@@ -15,8 +15,16 @@ import logging
 logger = logging.getLogger(__name__)
 import argparse
 import subprocess
+import os.path as op
 
 def make(args):
+    if not op.exists("build.sh"):
+        with open('build.sh', 'a') as the_file:
+            the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
+    if not op.exists("bld.bat"):
+        with open('bld.bat', 'a') as the_file:
+            the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
+
     if (args.bumptype == "patch"):
         print "pull, patch, push, push --tags"
         subprocess.call("git pull", shell=True)
@@ -44,6 +52,7 @@ def make(args):
         return
 # fi
     # upload to pypi
+
     subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
 
     # build conda and upload
