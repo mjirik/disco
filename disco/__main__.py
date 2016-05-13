@@ -52,7 +52,8 @@ def make(args):
     subprocess.call(["rm ", "-rf ", "linux-*"])
     subprocess.call(["rm ", "-rf ", "osx-*"])
 
-    subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
+    # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
+    subprocess.call("conda build .", shell=True)
     subprocess.call("conda convert -p all `conda build --output .`", shell=True)
 
     subprocess.call("binstar upload */*.tar.bz2", shell=True)
