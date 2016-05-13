@@ -17,6 +17,32 @@ import argparse
 import subprocess
 
 def make(args):
+    if (args.bumptype == "patch"):
+        print "pull, patch, push, push --tags"
+        subprocess.call("git pull", shell=True)
+        subprocess.call("bumpversion patch", shell=True)
+        subprocess.call("git push", shell=True)
+        subprocess.call("git push --tags", shell=True)
+    elif (args.bumptype == "minor"):
+        print "pull, patch, push, push --tags"
+        subprocess.call("git pull", shell=True)
+        subprocess.call("bumpversion minor", shell=True)
+        subprocess.call("git push", shell=True)
+        subprocess.call("git push --tags", shell=True)
+    elif (args.bumptype == "major"):
+        print "pull, patch, push, push --tags"
+        subprocess.call("git pull", shell=True)
+        subprocess.call("bumpversion major", shell=True)
+        subprocess.call("git push", shell=True)
+        subprocess.call("git push --tags", shell=True)
+    elif (args.bumptype == "stable"):
+        subprocess.call("git push --tags", shell=True)
+        subprocess.call("git checkout stable", shell=True)
+        subprocess.call("git pull origin master", shell=True)
+        subprocess.call("git push", shell=True)
+        subprocess.call("git checkout master", shell=True)
+        return
+# fi
     # upload to pypi
     subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
 
