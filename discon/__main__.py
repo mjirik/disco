@@ -53,20 +53,26 @@ def make(args):
 # fi
     # upload to pypi
 
+
+    logger.debug("pypi upload")
     subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
 
     # build conda and upload
+    logger.debug("conda clean")
 
     subprocess.call(["rm ", "-rf ", "win-*"])
     subprocess.call(["rm ", "-rf ", "linux-*"])
     subprocess.call(["rm ", "-rf ", "osx-*"])
+    logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
     subprocess.call("conda build .", shell=True)
     subprocess.call("conda convert -p all `conda build --output .`", shell=True)
 
+    logger.debug("binstar upload")
     subprocess.call("binstar upload */*.tar.bz2", shell=True)
 
+    logger.debug("rm files")
     subprocess.call(["rm", "-rf", "win-*"])
     subprocess.call(["rm", "-rf", "linux-*"])
     subprocess.call(["rm", "-rf", "osx-*"])
