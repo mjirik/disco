@@ -60,9 +60,19 @@ def make(args):
     # build conda and upload
     logger.debug("conda clean")
 
-    subprocess.call(["rm ", "-rf ", "win-*"])
-    subprocess.call(["rm ", "-rf ", "linux-*"])
-    subprocess.call(["rm ", "-rf ", "osx-*"])
+    try:
+        subprocess.call(["rm ", "-rf ", "win-*"])
+    except IOError:
+        pass
+    try:
+        subprocess.call(["rm ", "-rf ", "linux-*"])
+    except IOError:
+        pass
+    try:
+        subprocess.call(["rm ", "-rf ", "osx-*"])
+    except IOError:
+        pass
+
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
@@ -73,9 +83,18 @@ def make(args):
     subprocess.call("binstar upload */*.tar.bz2", shell=True)
 
     logger.debug("rm files")
-    subprocess.call(["rm", "-rf", "win-*"])
-    subprocess.call(["rm", "-rf", "linux-*"])
-    subprocess.call(["rm", "-rf", "osx-*"])
+    try:
+        subprocess.call(["rm ", "-rf ", "win-*"])
+    except IOError:
+        pass
+    try:
+        subprocess.call(["rm ", "-rf ", "linux-*"])
+    except IOError:
+        pass
+    try:
+        subprocess.call(["rm ", "-rf ", "osx-*"])
+    except IOError:
+        pass
 
 
 def main():
