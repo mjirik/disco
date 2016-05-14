@@ -80,7 +80,8 @@ def make(args):
     subprocess.call("conda convert -p all `conda build --output .`", shell=True)
 
     logger.debug("binstar upload")
-    subprocess.call("binstar upload */*.tar.bz2", shell=True)
+    # it could be ".tar.gz" or ".tar.bz2"
+    subprocess.call("binstar upload */*.tar.*z*", shell=True)
 
     logger.debug("rm files")
     try:
