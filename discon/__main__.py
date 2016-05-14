@@ -62,15 +62,15 @@ def make(args):
 
     try:
         subprocess.call(["rm ", "-rf ", "win-*"])
-    except IOError:
+    except OSError:
         pass
     try:
         subprocess.call(["rm ", "-rf ", "linux-*"])
-    except IOError:
+    except OSError:
         pass
     try:
         subprocess.call(["rm ", "-rf ", "osx-*"])
-    except IOError:
+    except OSError:
         pass
 
     logger.debug("conda build")
@@ -85,15 +85,15 @@ def make(args):
     logger.debug("rm files")
     try:
         subprocess.call(["rm ", "-rf ", "win-*"])
-    except IOError:
+    except OSError:
         pass
     try:
         subprocess.call(["rm ", "-rf ", "linux-*"])
-    except IOError:
+    except OSError:
         pass
     try:
         subprocess.call(["rm ", "-rf ", "osx-*"])
-    except IOError:
+    except OSError:
         pass
 
 
