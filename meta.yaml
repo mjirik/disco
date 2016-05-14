@@ -35,17 +35,9 @@ requirements:
   build:
     - python
     - setuptools
-    - numpy
-    - scipy
-    - pydicom
-    - pyyaml
 
   run:
     - python
-    - numpy
-    - scipy
-    - pydicom
-    - pyyaml
     - conda-build
 
 test:
