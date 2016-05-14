@@ -39,6 +39,7 @@ requirements:
   run:
     - python
     - conda-build
+    - anaconda-client
 
 test:
   # Python imports
