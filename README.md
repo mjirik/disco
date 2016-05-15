@@ -15,6 +15,8 @@ You will need `setup.py`, `meta.yaml` and `setup.cfg` in your python
 project directory. There also may be `bld.bat` and `build.sh`. These
 files are created if they are not exist.
 
+Conda channels should
+
 
 
 ## Usage

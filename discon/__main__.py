@@ -50,6 +50,8 @@ def make(args):
         subprocess.call("git push", shell=True)
         subprocess.call("git checkout master", shell=True)
         return
+    elif (args.bumptype == "init"):
+        init(project_name=args.arg2)
 # fi
     # upload to pypi
 
@@ -97,6 +99,20 @@ def make(args):
     except OSError:
         pass
 
+def init(project_name="project_name"):
+    if not op.exists(".condarc"):
+        with open('.condarc', 'a') as the_file:
+            the_file.write('channels:\n  - default\n#  - mjirik')
+    if not op.exists("setup.py"):
+        with open('setup.py', 'a') as the_file:
+            the_file.write(_SETUP_PY.format(project_name, project_name))
+    if not op.exists("setup.cfg"):
+        with open('setup.cfg', 'a') as the_file:
+            the_file.write(_SETUP_CFG)
+    if not op.exists("meta.yml"):
+        with open('meta.yml', 'a') as the_file:
+            the_file.write(_META_YML.format(project_name, project_name))
+
 
 def main():
     logger = logging.getLogger()
@@ -122,6 +138,9 @@ def main():
         "bumptype",
         default=None)
     parser.add_argument(
+        "arg2",
+        default=None)
+    parser.add_argument(
         '-i', '--inputfile',
         default=None,
         # required=True,
@@ -140,3 +159,172 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+_SETUP_PY = """
+# Fallowing command is used to upload to pipy
+#    python setup.py register sdist upload
+from setuptools import setup, find_packages
+# Always prefer setuptools over distutils
+from os import path
+
+here = path.abspath(path.dirname(__file__))
+setup(
+    name='{}',
+    description='distribution to pypi and conda',
+    # Versions should comply with PEP440.  For a discussion on single-sourcing
+    # the version across setup.py and the project code, see
+    # http://packaging.python.org/en/latest/tutorial.html#version
+    version='0.0.9',
+    url='https://github.com/mjirik/{}',
+    author='Miroslav Jirik',
+    author_email='miroslav.jirik@gmail.com',
+    license='MIT',
+
+    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 3 - Alpha',
+
+        # Indicate who your project is intended for
+        'Intended Audience :: Developers',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: BSD License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        # 'Programming Language :: Python :: 2',
+        # 'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        # 'Programming Language :: Python :: 3',
+        # 'Programming Language :: Python :: 3.2',
+        # 'Programming Language :: Python :: 3.3',
+        # 'Programming Language :: Python :: 3.4',
+    ],
+
+    # What does your project relate to?
+    keywords='dicom 3D read write',
+
+    # You can just specify the packages manually here if your project is
+    # simple. Or you can use find_packages().
+    packages=find_packages(exclude=['dist',  'docs', 'tests*']),
+
+    # List run-time dependencies here.  These will be installed by pip when
+    # your project is installed. For an analysis of "install_requires" vs pip's
+    # requirements files see:
+    # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
+    install_requires=['numpy', 'conda'],
+    # 'SimpleITK'],  # Removed becaouse of errors when pip is installing
+    dependency_links=[],
+
+    # If there are data files included in your packages that need to be
+    # installed, specify them here.  If using Python 2.6 or less, then these
+    # have to be included in MANIFEST.in as well.
+    # package_data={
+    #     'sample': ['package_data.dat'],
+    # },
+
+    # Although 'package_data' is the preferred approach, in some case you may
+    # need to place data files outside of your packages.
+    # see
+    # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
+    # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
+    # data_files=[('my_data', ['data/data_file'])],
+
+    # To provide executable scripts, use entry points in preference to the
+    # "scripts" keyword. Entry points provide cross-platform support and allow
+    # pip to create the appropriate form of executable for the target platform.
+    # entry_points=\{
+    #     'console_scripts': [
+    #         'sample=sample:main',
+    #     ],
+    # \},
+)
+"""
+
+_SETUP_CFG = """
+[bumpversion]
+current_version = 0.0.9
+files = setup.py meta.yaml
+commit = True
+tag = True
+tag_name = {new_version}
+
+[nosetests]
+attr = !interactive,!slow,!LAR
+"""
+
+_META_YML = """
+package:
+  name: {}
+  version: "0.0.0"
+
+source:
+# this is used for build from git hub
+  git_rev: 0.0.0
+  git_url: https://github.com/mjirik/io3d.git
+
+# this is used for pypi
+  # fn: io3d-1.0.30.tar.gz
+  # url: https://pypi.python.org/packages/source/i/io3d/io3d-1.0.30.tar.gz
+  # md5: a3ce512c4c97ac2410e6dcc96a801bd8
+#  patches:
+   # List any patch files here
+   # - fix.patch
+
+# build:
+  # noarch_python: True
+  # preserve_egg_dir: True
+  # entry_points:
+    # Put any entry points (scripts to be generated automatically) here. The
+    # syntax is module:function.  For example
+    #
+    # - io3d = io3d:main
+    #
+    # Would create an entry point called io3d that calls io3d.main()
+
+
+  # If this is a new build for the same version, increment the build
+  # number. If you do not include this key, it defaults to 0.
+  # number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - conda-build
+    - anaconda-client
+
+test:
+  # Python imports
+  imports:
+    - {}
+
+  # commands:
+    # You can put test commands to be run here.  Use this to test that the
+    # entry points work.
+
+
+  # You can also put a file called run_test.py in the recipe that will be run
+  # at test time.
+
+  # requires:
+    # Put any additional test requirements here.  For example
+    # - nose
+
+about:
+  home: https://github.com/mjirik/disco
+  license: BSD License
+  summary: 'distribution to pypi and conda'
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
+"""
