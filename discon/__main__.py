@@ -51,7 +51,7 @@ def make(args):
         subprocess.call("git checkout master", shell=True)
         return
     elif (args.bumptype == "init"):
-        init(project_name=args.arg2)
+        init()
 # fi
     # upload to pypi
 
@@ -137,9 +137,10 @@ def main():
     parser.add_argument(
         "bumptype",
         default=None)
-    parser.add_argument(
-        "arg2",
-        default=None)
+    # parser.add_argument(
+    #     "arg2",
+    #     required=False,
+    #     default=None)
     parser.add_argument(
         '-i', '--inputfile',
         default=None,
