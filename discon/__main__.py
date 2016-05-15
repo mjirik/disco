@@ -74,6 +74,10 @@ def make(args):
         subprocess.call(["rm ", "-rf ", "osx-*"])
     except OSError:
         pass
+    try:
+        subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
+    except OSError:
+        pass
 
     logger.debug("conda build")
 
