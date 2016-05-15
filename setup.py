@@ -12,7 +12,7 @@ setup(
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.10',
-    url='https://github.com/mjirik/disco',
+    url='https://github.com/mjirik/discon',
     author='Miroslav Jirik',
     author_email='miroslav.jirik@gmail.com',
     license='MIT',
