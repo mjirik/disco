@@ -35,6 +35,8 @@ requirements:
   build:
     - python
     - setuptools
+    - conda-build
+    - anaconda-client
 
   run:
     - python
