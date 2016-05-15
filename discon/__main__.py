@@ -75,10 +75,10 @@ def make(args):
     except OSError:
         pass
     # this fixes upload confilct
-    # try:
-    #     subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
-    # except OSError:
-    #     pass
+    try:
+        subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
+    except OSError:
+        pass
 
     logger.debug("conda build")
 
