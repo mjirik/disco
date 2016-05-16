@@ -57,6 +57,7 @@ def make(args):
         return
     elif (args.bumptype == "init"):
         init()
+        return
 # fi
     # upload to pypi
 
