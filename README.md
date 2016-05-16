@@ -21,6 +21,10 @@ Conda channels should
 
 ## Usage
 
+In new project you can generate `.condarc`, `setup.py`, `setup.cfg` and `meta.yml`
+
+    python -m discon init
+
 Create and upload new patch, minor or major version
 
     python -m discon patch
