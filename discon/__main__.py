@@ -7,7 +7,7 @@
 # Distributed under terms of the %LICENSE% license.
 
 """
-Push project to pypi and binstar (Anaconda)*
+Push project to pypi and binstar (Anaconda)
 
 
 """
@@ -30,32 +30,32 @@ def make(args):
         with open('bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
-    if (args.bumptype == "patch"):
+    if (args.action == "patch"):
         print "pull, patch, push, push --tags"
         subprocess.call("git pull", shell=True)
         subprocess.call("bumpversion patch", shell=True)
         subprocess.call("git push", shell=True)
         subprocess.call("git push --tags", shell=True)
-    elif (args.bumptype == "minor"):
+    elif (args.action == "minor"):
         print "pull, patch, push, push --tags"
         subprocess.call("git pull", shell=True)
         subprocess.call("bumpversion minor", shell=True)
         subprocess.call("git push", shell=True)
         subprocess.call("git push --tags", shell=True)
-    elif (args.bumptype == "major"):
+    elif (args.action == "major"):
         print "pull, patch, push, push --tags"
         subprocess.call("git pull", shell=True)
         subprocess.call("bumpversion major", shell=True)
         subprocess.call("git push", shell=True)
         subprocess.call("git push --tags", shell=True)
-    elif (args.bumptype == "stable"):
+    elif (args.action == "stable"):
         subprocess.call("git push --tags", shell=True)
         subprocess.call("git checkout stable", shell=True)
         subprocess.call("git pull origin master", shell=True)
         subprocess.call("git push", shell=True)
         subprocess.call("git checkout master", shell=True)
         return
-    elif (args.bumptype == "init"):
+    elif (args.action == "init"):
         init(args.initprojectname)
         return
 # fi
@@ -339,22 +339,24 @@ def main():
         description=__doc__
     )
     parser.add_argument(
-        "bumptype",
+        "action",
+        help="Available values are: 'init', 'patch', 'minor', 'major' or 'stable'",
         default=None)
     parser.add_argument(
         "initprojectname",
         nargs='?',
+        help="set project name in generated files if 'init' action is used",
         default="default_project")
     # parser.add_argument(
     #     "arg2",
     #     required=False,
     #     default=None)
-    parser.add_argument(
-        '-i', '--inputfile',
-        default=None,
-        # required=True,
-        help='input file'
-    )
+    # parser.add_argument(
+    #     '-i', '--inputfile',
+    #     default=None,
+    #     # required=True,
+    #     help='input file'
+    # )
     parser.add_argument(
         '-d', '--debug', action='store_true',
         help='Debug mode')
