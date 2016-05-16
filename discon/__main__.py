@@ -72,13 +72,13 @@ def make(args):
     for onedir in dr:
         shutil.rmtree(onedir)
     dr = glob.glob("osx-*")
-    for onefile in dr:
-        os.remove(onefile)
+    for onedir in dr:
+        shutil.rmtree(onedir)
 
     # this fixes upload confilct
     dr = glob.glob("dist/*.tar.gz")
-    for onedir in dr:
-        shutil.rmtree(onedir)
+    for onefile in dr:
+        os.remove(onefile)
 
     # try:
     #     subprocess.call(["rm ", "-rf ", "win-*"])
