@@ -134,7 +134,7 @@ def init(project_name="project_name"):
             the_file.write(_META_YML.format(project_name, project_name))
 
 
-def main()j
+def main():
     logger = logging.getLogger()
 
     logger.setLevel(logging.DEBUG)
