@@ -7,6 +7,8 @@
 # Distributed under terms of the %LICENSE% license.
 
 """
+Push project to pypi and binstar (Anaconda)*
+
 
 """
 
@@ -101,8 +103,11 @@ def make(args):
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    subprocess.call("conda build .", shell=True)
-    subprocess.call("conda convert -p all `conda build --output .`", shell=True)
+    subprocess.call(["conda", "build", "."])
+    output_name_lines = subprocess.check_output(["conda", "build", "--output", "."])
+    # get last line of output
+    output_name = output_name_lines.split("\n")[-2]
+    subprocess.call(["conda", "convert", "-p", "all", output_name])
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
@@ -348,4 +353,16 @@ about:
 # See
 # http://docs.continuum.io/conda/build.html for
 # more information about meta.yaml
+"""
+
+
+_CONDARC = """#!/bin/bash
+
+$PYTHON setup.py install
+
+# Add more build steps here, if they are necessary.
+
+# See
+# http://docs.continuum.io/conda/build.html
+# for a list of environment variables that are set during the build process.
 """
