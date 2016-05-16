@@ -15,6 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 import argparse
 import subprocess
+import os
 import os.path as op
 import shutil
 import glob
@@ -71,8 +72,8 @@ def make(args):
     for onedir in dr:
         shutil.rmtree(onedir)
     dr = glob.glob("osx-*")
-    for onedir in dr:
-        shutil.rmtree(onedir)
+    for onefile in dr:
+        os.remove(onefile)
 
     # this fixes upload confilct
     dr = glob.glob("dist/*.tar.gz")
@@ -133,7 +134,7 @@ def init(project_name="project_name"):
             the_file.write(_META_YML.format(project_name, project_name))
 
 
-def main():
+def main()j
     logger = logging.getLogger()
 
     logger.setLevel(logging.DEBUG)
