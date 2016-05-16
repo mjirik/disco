@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 import argparse
 import subprocess
 import os.path as op
+import shutil
+import glob
 
 def make(args):
     if not op.exists("build.sh"):
@@ -62,23 +64,38 @@ def make(args):
     # build conda and upload
     logger.debug("conda clean")
 
-    try:
-        subprocess.call(["rm ", "-rf ", "win-*"])
-    except OSError:
-        pass
-    try:
-        subprocess.call(["rm ", "-rf ", "linux-*"])
-    except OSError:
-        pass
-    try:
-        subprocess.call(["rm ", "-rf ", "osx-*"])
-    except OSError:
-        pass
+    dr = glob.glob("win-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+    dr = glob.glob("linux-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+    dr = glob.glob("osx-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+
     # this fixes upload confilct
-    try:
-        subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
-    except OSError:
-        pass
+    dr = glob.glob("dist/*.tar.gz")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+
+    # try:
+    #     subprocess.call(["rm ", "-rf ", "win-*"])
+    # except OSError:
+    #     pass
+    # try:
+    #     subprocess.call(["rm ", "-rf ", "linux-*"])
+    # except OSError:
+    #     pass
+    # try:
+    #     subprocess.call(["rm ", "-rf ", "osx-*"])
+    # except OSError:
+    #     pass
+    # # this fixes upload confilct
+    # try:
+    #     subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
+    # except OSError:
+    #     pass
 
     logger.debug("conda build")
 
@@ -91,18 +108,15 @@ def make(args):
     subprocess.call("binstar upload */*.tar.*z*", shell=True)
 
     logger.debug("rm files")
-    try:
-        subprocess.call(["rm ", "-rf ", "win-*"])
-    except OSError:
-        pass
-    try:
-        subprocess.call(["rm ", "-rf ", "linux-*"])
-    except OSError:
-        pass
-    try:
-        subprocess.call(["rm ", "-rf ", "osx-*"])
-    except OSError:
-        pass
+    dr = glob.glob("win-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+    dr = glob.glob("linux-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
+    dr = glob.glob("osx-*")
+    for onedir in dr:
+        shutil.rmtree(onedir)
 
 def init(project_name="project_name"):
     if not op.exists(".condarc"):
