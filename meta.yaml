@@ -1,10 +1,10 @@
 package:
   name: discon
-  version: "0.0.27"
+  version: "0.1.0"
 
 source:
 # this is used for build from git hub
-  git_rev: 0.0.27
+  git_rev: 0.1.0
   git_url: https://github.com/mjirik/discon.git
 
 # this is used for pypi 
