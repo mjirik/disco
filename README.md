@@ -12,7 +12,9 @@ Push python project to pypi and conda server
 
 ## Project directory
 You will need `setup.py`, `meta.yaml` and `setup.cfg` in your python
-project directory. There also may be `bld.bat` and `build.sh`. These
+project directory. Files can be generated with `init`.
+ 
+There also may be `bld.bat` and `build.sh`. These
 files are created if they are not exist.
 
 Conda channels should
@@ -24,6 +26,10 @@ Conda channels should
 In new project you can generate `.condarc`, `setup.py`, `setup.cfg` and `meta.yml`
 
     python -m discon init
+    
+or
+
+    python -m discon init project_name
 
 Create and upload new patch, minor or major version
 
