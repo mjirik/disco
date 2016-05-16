@@ -56,7 +56,7 @@ def make(args):
         subprocess.call("git checkout master", shell=True)
         return
     elif (args.bumptype == "init"):
-        init()
+        init(args.initprojectname)
         return
 # fi
     # upload to pypi
@@ -126,69 +126,7 @@ def make(args):
         shutil.rmtree(onedir)
 
 def init(project_name="project_name"):
-    if not op.exists(".condarc"):
-        with open('.condarc', 'a') as the_file:
-            the_file.write('channels:\n  - default\n#  - mjirik')
-    if not op.exists("setup.py"):
-        with open('setup.py', 'a') as the_file:
-            the_file.write(_SETUP_PY.format(project_name, project_name))
-    if not op.exists("setup.cfg"):
-        with open('setup.cfg', 'a') as the_file:
-            the_file.write(_SETUP_CFG)
-    if not op.exists("meta.yml"):
-        with open('meta.yml', 'a') as the_file:
-            the_file.write(_META_YML.format(project_name, project_name))
-
-
-def main():
-    logger = logging.getLogger()
-
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    logger.addHandler(ch)
-
-    # create file handler which logs even debug messages
-    # fh = logging.FileHandler('log.txt')
-    # fh.setLevel(logging.DEBUG)
-    # formatter = logging.Formatter(
-    #     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # fh.setFormatter(formatter)
-    # logger.addHandler(fh)
-    # logger.debug('start')
-
-    # input parser
-    parser = argparse.ArgumentParser(
-        description=__doc__
-    )
-    parser.add_argument(
-        "bumptype",
-        default=None)
-    # parser.add_argument(
-    #     "arg2",
-    #     required=False,
-    #     default=None)
-    parser.add_argument(
-        '-i', '--inputfile',
-        default=None,
-        # required=True,
-        help='input file'
-    )
-    parser.add_argument(
-        '-d', '--debug', action='store_true',
-        help='Debug mode')
-    args = parser.parse_args()
-
-    if args.debug:
-        ch.setLevel(logging.DEBUG)
-
-    make(args)
-
-
-if __name__ == "__main__":
-    main()
-
-_SETUP_PY = """
-# Fallowing command is used to upload to pipy
+    _SETUP_PY = """# Fallowing command is used to upload to pipy
 #    python setup.py register sdist upload
 from setuptools import setup, find_packages
 # Always prefer setuptools over distutils
@@ -201,7 +139,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.0.9',
+    version='0.0.0',
     url='https://github.com/mjirik/{}',
     author='Miroslav Jirik',
     author_email='miroslav.jirik@gmail.com',
@@ -251,9 +189,9 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-    # package_data={
+    # package_data={{
     #     'sample': ['package_data.dat'],
-    # },
+    # }},
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
@@ -265,17 +203,17 @@ setup(
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    # entry_points=\{
+    # entry_points={{
     #     'console_scripts': [
     #         'sample=sample:main',
     #     ],
-    # \},
+    # }},
 )
 """
 
-_SETUP_CFG = """
+    _SETUP_CFG = """
 [bumpversion]
-current_version = 0.0.9
+current_version = 0.0.0
 files = setup.py meta.yaml
 commit = True
 tag = True
@@ -285,15 +223,14 @@ tag_name = {new_version}
 attr = !interactive,!slow,!LAR
 """
 
-_META_YML = """
-package:
+    _META_YML = """package:
   name: {}
   version: "0.0.0"
 
 source:
 # this is used for build from git hub
   git_rev: 0.0.0
-  git_url: https://github.com/mjirik/io3d.git
+  git_url: https://github.com/mjirik/{}.git
 
 # this is used for pypi
   # fn: io3d-1.0.30.tar.gz
@@ -357,7 +294,7 @@ about:
 """
 
 
-_CONDARC = """#!/bin/bash
+    _CONDARC = """#!/bin/bash
 
 $PYTHON setup.py install
 
@@ -367,3 +304,68 @@ $PYTHON setup.py install
 # http://docs.continuum.io/conda/build.html
 # for a list of environment variables that are set during the build process.
 """
+    if not op.exists(".condarc"):
+        with open('.condarc', 'a') as the_file:
+            the_file.write('channels:\n  - default\n#  - mjirik')
+    if not op.exists("setup.py"):
+        with open('setup.py', 'a') as the_file:
+            the_file.write(_SETUP_PY.format(project_name, project_name))
+    if not op.exists("setup.cfg"):
+        with open('setup.cfg', 'a') as the_file:
+            the_file.write(_SETUP_CFG)
+    if not op.exists("meta.yml"):
+        with open('meta.yml', 'a') as the_file:
+            the_file.write(_META_YML.format(project_name, project_name, project_name))
+
+
+def main():
+    logger = logging.getLogger()
+
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    logger.addHandler(ch)
+
+    # create file handler which logs even debug messages
+    # fh = logging.FileHandler('log.txt')
+    # fh.setLevel(logging.DEBUG)
+    # formatter = logging.Formatter(
+    #     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # fh.setFormatter(formatter)
+    # logger.addHandler(fh)
+    # logger.debug('start')
+
+    # input parser
+    parser = argparse.ArgumentParser(
+        description=__doc__
+    )
+    parser.add_argument(
+        "bumptype",
+        default=None)
+    parser.add_argument(
+        "initprojectname",
+        nargs='?',
+        default="default_project")
+    # parser.add_argument(
+    #     "arg2",
+    #     required=False,
+    #     default=None)
+    parser.add_argument(
+        '-i', '--inputfile',
+        default=None,
+        # required=True,
+        help='input file'
+    )
+    parser.add_argument(
+        '-d', '--debug', action='store_true',
+        help='Debug mode')
+    args = parser.parse_args()
+
+    if args.debug:
+        ch.setLevel(logging.DEBUG)
+
+    make(args)
+
+
+if __name__ == "__main__":
+    main()
+
