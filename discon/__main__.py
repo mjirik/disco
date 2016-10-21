@@ -316,8 +316,8 @@ $PYTHON setup.py install
     if not op.exists("setup.cfg"):
         with open('setup.cfg', 'a') as the_file:
             the_file.write(_SETUP_CFG)
-    if not op.exists("meta.yml"):
-        with open('meta.yml', 'a') as the_file:
+    if not op.exists("meta.yaml"):
+        with open('meta.yaml', 'a') as the_file:
             the_file.write(_META_YML.format(project_name, project_name, project_name))
 
 
