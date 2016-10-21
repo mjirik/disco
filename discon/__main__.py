@@ -60,10 +60,13 @@ def make(args):
         return
 # fi
     # upload to pypi
+    pypi_upload = True
+    if not args.no_pypi:
+        pypi_upload = False
 
-
-    logger.debug("pypi upload")
-    subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
+    if pypi_upload:
+        logger.debug("pypi upload")
+        subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
 
     # build conda and upload
     logger.debug("conda clean")
@@ -360,6 +363,9 @@ def main():
     parser.add_argument(
         '-d', '--debug', action='store_true',
         help='Debug mode')
+    parser.add_argument(
+        '-np', '--no-pypi', action='store_true',
+        help='Do not upload to pypi')
     args = parser.parse_args()
 
     if args.debug:
