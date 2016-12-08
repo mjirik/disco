@@ -266,8 +266,7 @@ requirements:
 
   run:
     - python
-    - conda-build
-    - anaconda-client
+    # - numpy
 
 test:
   # Python imports
