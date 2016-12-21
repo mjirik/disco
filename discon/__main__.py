@@ -137,8 +137,8 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 setup(
-    name='{}',
-    description='distribution to pypi and conda',
+    name='{name}',
+    description='{description}',
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
@@ -175,7 +175,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='dicom 3D read write',
+    keywords='{keywords}',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -227,13 +227,13 @@ attr = !interactive,!slow,!LAR
 """
 
     _META_YML = """package:
-  name: {}
+  name: {name}
   version: "0.0.0"
 
 source:
 # this is used for build from git hub
   git_rev: 0.0.0
-  git_url: https://github.com/mjirik/{}.git
+  git_url: https://github.com/mjirik/{name}.git
 
 # this is used for pypi
   # fn: io3d-1.0.30.tar.gz
@@ -250,9 +250,9 @@ source:
     # Put any entry points (scripts to be generated automatically) here. The
     # syntax is module:function.  For example
     #
-    # - io3d = io3d:main
+    # - {name} = {name}:main
     #
-    # Would create an entry point called io3d that calls io3d.main()
+    # Would create an entry point called io3d that calls {name}.main()
 
 
   # If this is a new build for the same version, increment the build
@@ -271,7 +271,7 @@ requirements:
 test:
   # Python imports
   imports:
-    - {}
+    - {name}
 
   # commands:
     # You can put test commands to be run here.  Use this to test that the
@@ -286,7 +286,7 @@ test:
     # - nose
 
 about:
-  home: https://github.com/mjirik/disco
+  home: https://github.com/mjirik/{name}
   license: BSD License
   summary: 'distribution to pypi and conda'
 
@@ -306,18 +306,84 @@ $PYTHON setup.py install
 # http://docs.continuum.io/conda/build.html
 # for a list of environment variables that are set during the build process.
 """
+
+    _TRAVIS_YML="""language: python
+python:
+  #  - "2.6"
+  - "2.7"
+  # - "3.2"
+  # - "3.3"
+  # - "3.4"
+
+
+os: linux
+# Ubuntu 14.04 Trusty support
+sudo: required
+dist: trusty
+# install new cmake
+#addons:
+#  apt:
+#    packages:
+#      - cmake
+#    sources:
+#      - kalakris-cmake
+virtualenv:
+  system_site_packages: true
+before_script:
+    # GUI
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+    - sleep 3 # give xvfb sume time to start
+
+before_install:
+    - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    - chmod +x miniconda.sh
+    - ./miniconda.sh -b
+    - export PATH=/home/travis/miniconda2/bin:$PATH
+    - sudo apt-get update
+
+#    - sudo apt-get install -qq cmake libinsighttoolkit3-dev libpng12-dev libgdcm2-dev
+    # - wget http://147.228.240.61/queetech/sample-extra-data/io3d_sample_data.zip && unzip io3d_sample_data.zip
+# command to install dependencies
+install:
+
+    - conda update --yes conda
+    - conda install --yes pip nose coverage
+#    - Install dependencies
+    - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
+#    - pip install -r requirements_pip.txt
+#    - "echo $LD_LIBRARY_PATH"
+#    - "pip install -r requirements.txt"
+#    - 'mkdir build'
+#    - "cd build"
+#    - "cmake .."
+#    - "cmake --build ."
+#    - "sudo make install"
+#    - pip install .
+#    - "cd .."
+#    - 'echo "include /usr/local/lib" | sudo tee -a /etc/ld.so.conf'
+#    - 'sudo ldconfig -v'
+#    - conda list -e
+# command to run tests
+script: nosetests --with-coverage --cover-package={name}
+after_success:
+    - coveralls
+"""
     if not op.exists(".condarc"):
         with open('.condarc', 'a') as the_file:
             the_file.write('channels:\n  - default\n#  - mjirik')
     if not op.exists("setup.py"):
         with open('setup.py', 'a') as the_file:
-            the_file.write(_SETUP_PY.format(project_name, project_name))
+            the_file.write(_SETUP_PY.format(name=project_name, description="", keywords=""))
     if not op.exists("setup.cfg"):
         with open('setup.cfg', 'a') as the_file:
             the_file.write(_SETUP_CFG)
     if not op.exists("meta.yaml"):
         with open('meta.yaml', 'a') as the_file:
-            the_file.write(_META_YML.format(project_name, project_name, project_name))
+            the_file.write(_META_YML.format(name=project_name))
+    if not op.exists(".travis.yaml"):
+        with open('.travis.yaml', 'a') as the_file:
+            the_file.write(_TRAVIS_YML.format(name=project_name))
 
 
 def main():
