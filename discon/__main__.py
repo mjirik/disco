@@ -118,7 +118,7 @@ def make(args):
     conda_build_command = ["conda", "build", "."]
     for channel in args.channel:
         conda_build_command.append("-c")
-        conda_build_command.append(channel)
+        conda_build_command.append(channel[0])
 
     mycall(conda_build_command)
     output_name_lines = subprocess.check_output(["conda", "build", "--output", "."])
