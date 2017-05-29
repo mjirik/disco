@@ -21,6 +21,15 @@ import os
 import os.path as op
 import shutil
 import glob
+import git
+
+
+def mycall(command):
+    if type(command) is list:
+        subprocess.call(command)
+    else:
+        subprocess.call(command, shell=True)
+
 
 def make(args):
     if not op.exists("build.sh"):
@@ -30,34 +39,30 @@ def make(args):
         with open('bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
-    if (args.action == "patch"):
-        print "pull, patch, push, push --tags"
-        subprocess.call("git pull", shell=True)
-        subprocess.call("bumpversion patch", shell=True)
-        subprocess.call("git push", shell=True)
-        subprocess.call("git push --tags", shell=True)
-    elif (args.action == "minor"):
-        print "pull, patch, push, push --tags"
-        subprocess.call("git pull", shell=True)
-        subprocess.call("bumpversion minor", shell=True)
-        subprocess.call("git push", shell=True)
-        subprocess.call("git push --tags", shell=True)
-    elif (args.action == "major"):
-        print "pull, patch, push, push --tags"
-        subprocess.call("git pull", shell=True)
-        subprocess.call("bumpversion major", shell=True)
-        subprocess.call("git push", shell=True)
-        subprocess.call("git push --tags", shell=True)
-    elif (args.action == "stable"):
-        subprocess.call("git push --tags", shell=True)
-        subprocess.call("git checkout stable", shell=True)
-        subprocess.call("git pull origin master", shell=True)
-        subprocess.call("git push", shell=True)
-        subprocess.call("git checkout master", shell=True)
+    import pdb
+    pdb.set_trace()
+    repo = git.Repo(".")
+    if repo.is_dirty():
+        logger.error("Git working directory is dirty. Clean it.")
         return
-    elif (args.action == "init"):
+    if (args.action == "init"):
         init(args.initprojectname)
         return
+    elif (args.action == "stable"):
+        mycall("git push --tags")
+        mycall("git checkout stable")
+        mycall("git pull origin master")
+        mycall("git push")
+        mycall("git checkout master")
+        return
+    elif args.action in ["minor", "major", "patch"]:
+        print("pull, patch, push, push --tags")
+        mycall("git pull")
+        mycall("bumpversion " + args.action)
+        mycall("git push")
+        mycall("git push --tags")
+    else:
+        print("unkown command `"+ args.action + "`")
 # fi
     # upload to pypi
     pypi_upload = True
@@ -66,7 +71,7 @@ def make(args):
 
     if pypi_upload:
         logger.debug("pypi upload")
-        subprocess.call(["python", "setup.py", "register", "sdist", "upload"])
+        mycall(["python", "setup.py", "register", "sdist", "upload"])
 
     # build conda and upload
     logger.debug("conda clean")
@@ -107,15 +112,20 @@ def make(args):
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    subprocess.call(["conda", "build", "."])
+    conda_build_command = ["conda", "build", "."]
+    for channel in args.channel:
+        conda_build_command.append("-c")
+        conda_build_command.append(channel)
+
+    mycall(conda_build_command)
     output_name_lines = subprocess.check_output(["conda", "build", "--output", "."])
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
-    subprocess.call(["conda", "convert", "-p", "all", output_name])
+    mycall(["conda", "convert", "-p", "all", output_name])
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
-    subprocess.call("binstar upload */*.tar.*z*", shell=True)
+    mycall("binstar upload */*.tar.*z*", shell=True)
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
@@ -267,6 +277,7 @@ requirements:
   run:
     - python
     # - numpy
+    # - pyqt 4.11.*
 
 test:
   # Python imports
@@ -415,6 +426,12 @@ def main():
         nargs='?',
         help="set project name in generated files if 'init' action is used",
         default="default_project")
+    parser.add_argument(
+        "-c", "--channel",
+        nargs=1,
+        action="append",
+        help="Add conda channel",
+        default=[])
     # parser.add_argument(
     #     "arg2",
     #     required=False,
