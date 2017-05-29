@@ -106,7 +106,7 @@ def make(args):
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
-    mycall("binstar upload */*.tar.*z*", shell=True)
+    mycall("binstar upload */*.tar.*z*")
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
