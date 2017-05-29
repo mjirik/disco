@@ -25,8 +25,6 @@ import git
 
 
 def mycall(command):
-    import pdb
-    pdb.set_trace()
     if type(command) is list:
         subprocess.call(command)
     else:
@@ -41,8 +39,6 @@ def make(args):
         with open('bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
-    import pdb
-    pdb.set_trace()
     repo = git.Repo(".")
     if repo.is_dirty():
         logger.error("Git working directory is dirty. Clean it.")
