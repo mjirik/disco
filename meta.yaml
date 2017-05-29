@@ -37,11 +37,14 @@ requirements:
     - setuptools
     - conda-build
     - anaconda-client
+    - gitpython
 
   run:
     - python
     - conda-build
     - anaconda-client
+    - gitpython
+    - bumpversion
 
 test:
   # Python imports
