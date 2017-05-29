@@ -62,7 +62,7 @@ def make(args):
         mycall("git push")
         mycall("git push --tags")
     else:
-        print("unkown command `"+ args.action + "`")
+        logger.error("Unkown command `"+ args.action + "`")
 # fi
     # upload to pypi
     pypi_upload = True
