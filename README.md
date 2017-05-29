@@ -9,18 +9,22 @@ Push python project to pypi and conda server
 
 ## Install
 
-    conda install -c mjirik discon
+    conda install -c mjirik -c conda-forge discon
 
 
-## Init user accounts
+## Required user accounts
 
-### pypi
+### Init PyPI
 
-create `.pypirc` with password and login
+https://pypi.python.org/pypi
 
-### anaconda
+Create `~/.pypirc` with password and login
+
+### Init Anaconda
 
 https://anaconda.org/account/
+
+Login to anaconda:
 
     binstar login
 
@@ -50,7 +54,7 @@ Create and upload new patch, minor or major version
 
     python -m discon patch
     python -m discon minor
-    python -m discon major
+    python -m discon major -c some_channel
 
 
 Push your git `master` branch to `stable` branch
