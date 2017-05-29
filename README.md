@@ -4,11 +4,26 @@ Push python project to pypi and conda server
 ## Prerequisities
 
     conda install conda-build anaconda-client
-    apt get install bumpversion
+    apt-get install bumpversion
+
 
 ## Install
 
     conda install -c mjirik discon
+
+
+## Init user accounts
+
+### pypi
+
+create `.pypirc` with password and login
+
+### anaconda
+
+https://anaconda.org/account/
+
+    binstar login
+
 
 ## Project directory
 You will need `setup.py`, `meta.yaml` and `setup.cfg` in your python
