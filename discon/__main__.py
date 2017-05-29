@@ -25,6 +25,8 @@ import git
 
 
 def mycall(command):
+    import pdb
+    pdb.set_trace()
     if type(command) is list:
         subprocess.call(command)
     else:
