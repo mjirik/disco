@@ -58,7 +58,7 @@ def make(args):
         mycall("git checkout master")
         return
     elif args.action in ["minor", "major", "patch"]:
-        print("pull, patch, push, push --tags")
+        logger.debug("pull, patch, push, push --tags")
         mycall("git pull")
         mycall("bumpversion " + args.action)
         mycall("git push")
@@ -93,24 +93,6 @@ def make(args):
     dr = glob.glob("dist/*.tar.gz")
     for onefile in dr:
         os.remove(onefile)
-
-    # try:
-    #     subprocess.call(["rm ", "-rf ", "win-*"])
-    # except OSError:
-    #     pass
-    # try:
-    #     subprocess.call(["rm ", "-rf ", "linux-*"])
-    # except OSError:
-    #     pass
-    # try:
-    #     subprocess.call(["rm ", "-rf ", "osx-*"])
-    # except OSError:
-    #     pass
-    # # this fixes upload confilct
-    # try:
-    #     subprocess.call(["rm ", "-rf ", "dist/*.tar.gz"])
-    # except OSError:
-    #     pass
 
     logger.debug("conda build")
 
