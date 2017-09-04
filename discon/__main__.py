@@ -408,7 +408,7 @@ def main():
         help="set project name in generated files if 'init' action is used",
         default="default_project")
     parser.add_argument("--py", default="all",
-            "specify python version. '--py 2.7' or '--py all' for all python version" )
+            help="specify python version. '--py 2.7' or '--py all' for all python version" )
     parser.add_argument(
         "-c", "--channel",
         nargs=1,
