@@ -109,7 +109,7 @@ def conda_build_and_upload(python_version):
         conda_build_command.append(channel[0])
 
     mycall(conda_build_command)
-    output_name_lines = subprocess.check_output(["conda", "build", "--output", "."])
+    output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
     mycall(["conda", "convert", "-p", "all", output_name])
