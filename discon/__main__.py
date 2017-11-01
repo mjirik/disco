@@ -103,7 +103,7 @@ def conda_build_and_upload(python_version):
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    conda_build_command = ["conda", "build", "--py", args.py,  "."]
+    conda_build_command = ["conda", "build", "--py", python_version,  "."]
     for channel in args.channel:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
