@@ -91,14 +91,14 @@ def make(args):
         os.remove(onefile)
 
 
+    pythons = args.py
     if args.py == "both":
         pythons = ["2.7", "3.6"]
-    else:
-        pythons = [args.py]
+
     for python_version in pythons:
         conda_build_and_upload(python_version)
 
-def conda_build_and_upload(python_version)
+def conda_build_and_upload(python_version):
 
     logger.debug("conda build")
 
@@ -420,9 +420,11 @@ def main():
         default="default_project")
     parser.add_argument("--py",
             # default="2.7",
-            default="both",
+            # default="both",
+            action="append",
+            default=["2.7", "3.6"],
             # default="all",
-            help="specify python version. '--py 2.7' or '--py all' for all python version" )
+            help="specify python version. '--py 2.7' or '--py both' for python 3.6 and 2.7" )
     parser.add_argument(
         "-c", "--channel",
         nargs=1,
