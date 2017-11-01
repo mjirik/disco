@@ -90,6 +90,16 @@ def make(args):
     for onefile in dr:
         os.remove(onefile)
 
+
+    if args.py == "both":
+        pythons = ["2.7", "3.6"]
+    else:
+        pythons = [args.py]
+    for python_version in pythons:
+        conda_build_and_upload(python_version)
+
+def conda_build_and_upload(python_version)
+
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
@@ -106,7 +116,8 @@ def make(args):
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
-    mycall("binstar upload */*.tar.*z*")
+    mycall("anaconda upload */*.tar.*z*")
+    mycall(["anaconda", "upload", output_name])
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
@@ -408,7 +419,8 @@ def main():
         help="set project name in generated files if 'init' action is used",
         default="default_project")
     parser.add_argument("--py",
-            default="2.7",
+            # default="2.7",
+            default="both",
             # default="all",
             help="specify python version. '--py 2.7' or '--py all' for all python version" )
     parser.add_argument(
