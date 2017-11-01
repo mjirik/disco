@@ -112,12 +112,13 @@ def conda_build_and_upload(python_version):
     output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
+    logger.debug("build output file: " + output_name)
     mycall(["conda", "convert", "-p", "all", output_name])
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
-    mycall("anaconda upload */*.tar.*z*")
     mycall(["anaconda", "upload", output_name])
+    mycall("anaconda upload */*.tar.*z*")
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
