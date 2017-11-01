@@ -96,15 +96,15 @@ def make(args):
         pythons = ["2.7", "3.6"]
 
     for python_version in pythons:
-        conda_build_and_upload(python_version)
+        conda_build_and_upload(python_version, args.channel)
 
-def conda_build_and_upload(python_version):
+def conda_build_and_upload(python_version, channels):
 
     logger.debug("conda build")
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
     conda_build_command = ["conda", "build", "--py", python_version,  "."]
-    for channel in args.channel:
+    for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
 
