@@ -64,6 +64,17 @@ def make(args):
         return
 # fi
     # upload to pypi
+    pypi_build_and_upload(args)
+
+
+    pythons = args.py
+    if args.py == "both":
+        pythons = ["2.7", "3.6"]
+
+    for python_version in pythons:
+        conda_build_and_upload(python_version, args.channel)
+
+def pypi_build_and_upload(args):
     pypi_upload = True
     if not args.no_pypi:
         pypi_upload = False
@@ -91,12 +102,6 @@ def make(args):
         os.remove(onefile)
 
 
-    pythons = args.py
-    if args.py == "both":
-        pythons = ["2.7", "3.6"]
-
-    for python_version in pythons:
-        conda_build_and_upload(python_version, args.channel)
 
 def conda_build_and_upload(python_version, channels):
 
@@ -109,7 +114,9 @@ def conda_build_and_upload(python_version, channels):
         conda_build_command.append(channel[0])
 
     mycall(conda_build_command)
-    output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
+    conda_build_command.append("--output")
+    # output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
+    output_name_lines = subprocess.check_output(conda_build_command)
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
