@@ -108,7 +108,7 @@ def pypi_build_and_upload(args):
 def conda_build_and_upload(python_version, channels):
 
     logger.debug("conda build")
-    logger.debug("build python_version :", python_version)
+    logger.debug("build python_version :" + str( python_version))
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
     conda_build_command = ["conda", "build", "--py", python_version,  "."]
