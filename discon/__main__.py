@@ -68,10 +68,10 @@ def make(args):
 
 
     pythons = args.py
-    logger.debug("py before ", args.py)
+    logger.debug("py before " + str( args.py))
     if args.py == "both":
         pythons = ["2.7", "3.6"]
-    logger.debug("py after", args.py)
+    logger.debug("py after" + str( args.py))
 
     for python_version in pythons:
         conda_build_and_upload(python_version, args.channel)
