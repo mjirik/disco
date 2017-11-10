@@ -68,8 +68,10 @@ def make(args):
 
 
     pythons = args.py
+    logger.debug("py before ", args.py)
     if args.py == "both":
         pythons = ["2.7", "3.6"]
+    logger.debug("py after", args.py)
 
     for python_version in pythons:
         conda_build_and_upload(python_version, args.channel)
@@ -450,12 +452,19 @@ def main():
     #     help='input file'
     # )
     parser.add_argument(
+        '-ll', '--loglevel', type=int, default=None,
+        help='Debug level 0 to 100')
+
+    parser.add_argument(
         '-d', '--debug', action='store_true',
         help='Debug mode')
     parser.add_argument(
         '-np', '--no-pypi', action='store_true',
         help='Do not upload to pypi')
     args = parser.parse_args()
+
+    if args.loglevel is not None:
+        ch.setLevel(args.loglevel)
 
     if args.debug:
         ch.setLevel(logging.DEBUG)
