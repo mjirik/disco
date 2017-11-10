@@ -69,7 +69,7 @@ def make(args):
 
     pythons = args.py
     logger.debug("py before " + str( args.py))
-    if args.py == "both":
+    if len(args.py) == 0 or (len(args.py) > 0 and args.py in ("both", "all")):
         pythons = ["2.7", "3.6"]
     logger.debug("py after" + str( args.py))
 
@@ -433,7 +433,7 @@ def main():
             # default="2.7",
             # default="both",
             action="append",
-            default=["2.7", "3.6"],
+            default=[],
             # default="all",
             help="specify python version. '--py 2.7' or '--py both' for python 3.6 and 2.7" )
     parser.add_argument(
