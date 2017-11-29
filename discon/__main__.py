@@ -59,6 +59,8 @@ def make(args):
         mycall("bumpversion " + args.action)
         mycall("git push")
         mycall("git push --tags")
+    elif args.action in ["upload"]:
+        logger.debug("just upload to conda and pypi")
     else:
         logger.error("Unkown command '"+ args.action + "'")
         return
@@ -68,10 +70,9 @@ def make(args):
 
 
     pythons = args.py
-    logger.debug("py before " + str( args.py))
     if len(args.py) == 0 or (len(args.py) > 0 and args.py in ("both", "all")):
         pythons = ["2.7", "3.6"]
-    logger.debug("py after" + str( args.py))
+    logger.debug("python versions " + str( args.py))
 
     for python_version in pythons:
         conda_build_and_upload(python_version, args.channel)
@@ -119,11 +120,14 @@ def conda_build_and_upload(python_version, channels):
     mycall(conda_build_command)
     conda_build_command.append("--output")
     # output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
+    logger.debug(" ".join(conda_build_command))
     output_name_lines = subprocess.check_output(conda_build_command)
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
-    mycall(["conda", "convert", "-p", "all", output_name])
+    cmd_convert = ["conda", "convert", "-p", "all", output_name]
+    logger.debug(" ".join(cmd_convert))
+    mycall(cmd_convert)
 
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
@@ -422,7 +426,7 @@ def main():
     )
     parser.add_argument(
         "action",
-        help="Available values are: 'init', 'patch', 'minor', 'major' or 'stable'",
+        help="Available values are: 'init', 'patch', 'minor', 'major', 'stable' or 'upload' ",
         default=None)
     parser.add_argument(
         "initprojectname",
