@@ -30,8 +30,12 @@ def mycall(command):
         subprocess.call(command, shell=True)
 
 def check_git():
-    import git
-    import git.exc
+    try:
+        import git
+        import git.exc
+    except:
+        logger.info("GitPython is not installed")
+        return
 
     try:
         repo = git.Repo(".")
