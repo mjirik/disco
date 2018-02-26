@@ -84,7 +84,9 @@ def pypi_build_and_upload(args):
 
     if pypi_upload:
         logger.debug("pypi upload")
-        mycall(["python", "setup.py", "register", "sdist", "upload"])
+        # preregistration is no longer required
+        # mycall(["python", "setup.py", "register", "-r", "pypi"])
+        mycall(["python", "setup.py", "sdist", "upload", "-r", "pypi"])
 
     # build conda and upload
     logger.debug("conda clean")
