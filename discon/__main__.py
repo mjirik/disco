@@ -21,7 +21,6 @@ import os
 import os.path as op
 import shutil
 import glob
-import git
 
 
 def mycall(command):
@@ -30,6 +29,19 @@ def mycall(command):
     else:
         subprocess.call(command, shell=True)
 
+def check_git():
+    import git
+    import git.exc
+
+    try:
+        repo = git.Repo(".")
+    except git.exc.InvalidGitRepositoryError as e:
+        logger.info("It is not Git repo")
+
+
+    if repo.is_dirty():
+        logger.error("Git working directory is dirty. Clean it.")
+        exit()
 
 def make(args):
     if not op.exists("build.sh"):
@@ -39,10 +51,7 @@ def make(args):
         with open('bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
-    repo = git.Repo(".")
-    if repo.is_dirty():
-        logger.error("Git working directory is dirty. Clean it.")
-        return
+    check_git()
     if (args.action == "init"):
         init(args.initprojectname)
         return
@@ -79,11 +88,11 @@ def make(args):
 
 def pypi_build_and_upload(args):
     pypi_upload = True
-    if not args.no_pypi:
+    if args.no_pypi:
         pypi_upload = False
 
     if pypi_upload:
-        logger.debug("pypi upload")
+        logger.info("pypi upload")
         # preregistration is no longer required
         # mycall(["python", "setup.py", "register", "-r", "pypi"])
         mycall(["python", "setup.py", "sdist", "upload", "-r", "pypi"])
@@ -468,6 +477,9 @@ def main():
     parser.add_argument(
         '-np', '--no-pypi', action='store_true',
         help='Do not upload to pypi')
+    parser.add_argument(
+        '-nc', '--no-conda', action='store_true',
+        help='Do not process conda package')
     args = parser.parse_args()
 
     if args.loglevel is not None:
