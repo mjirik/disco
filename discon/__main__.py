@@ -57,7 +57,7 @@ def make(args):
 
     check_git()
     if (args.action == "init"):
-        init(args.initprojectname)
+        init(args.initprojectname) #, author=args.author, email=args.email, githubuser=args.gihubuser)
         return
     elif (args.action == "stable"):
         mycall("git push --tags")
@@ -175,9 +175,9 @@ setup(
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.0',
-    url='https://github.com/mjirik/{}',
-    author='Miroslav Jirik',
-    author_email='miroslav.jirik@gmail.com',
+    url='https://github.com/{githublogin}/{name}',
+    author='{author}',
+    author_email='{email}',
     license='MIT',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -407,7 +407,10 @@ after_success:
             the_file.write('channels:\n  - default\n#  - mjirik')
     if not op.exists("setup.py"):
         with open('setup.py', 'a') as the_file:
-            the_file.write(_SETUP_PY.format(name=project_name, description="", keywords=""))
+            the_file.write(_SETUP_PY.format(
+                name=project_name, description="", keywords="", author="",
+                email="", githublogin=""
+            ))
     if not op.exists("setup.cfg"):
         with open('setup.cfg', 'a') as the_file:
             the_file.write(_SETUP_CFG)
