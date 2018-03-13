@@ -57,7 +57,7 @@ def make(args):
 
     check_git()
     if (args.action == "init"):
-        init(args.initprojectname) #, author=args.author, email=args.email, githubuser=args.gihubuser)
+        init(args) #, author=args.author, email=args.email, githubuser=args.gihubuser)
         return
     elif (args.action == "stable"):
         mycall("git push --tags")
@@ -160,7 +160,7 @@ def conda_build_and_upload(python_version, channels):
     for onedir in dr:
         shutil.rmtree(onedir)
 
-def init(project_name="project_name"):
+def init(args):
     _SETUP_PY = """# Fallowing command is used to upload to pipy
 #    python setup.py register sdist upload
 from setuptools import setup, find_packages
@@ -402,24 +402,38 @@ script: nosetests --with-coverage --cover-package={name}
 after_success:
     - coveralls
 """
-    if not op.exists(".condarc"):
-        with open('.condarc', 'a') as the_file:
-            the_file.write('channels:\n  - default\n#  - mjirik')
-    if not op.exists("setup.py"):
-        with open('setup.py', 'a') as the_file:
-            the_file.write(_SETUP_PY.format(
-                name=project_name, description="", keywords="", author="",
-                email="", githublogin=""
-            ))
-    if not op.exists("setup.cfg"):
-        with open('setup.cfg', 'a') as the_file:
-            the_file.write(_SETUP_CFG)
-    if not op.exists("meta.yaml"):
-        with open('meta.yaml', 'a') as the_file:
-            the_file.write(_META_YML.format(name=project_name))
-    if not op.exists(".travis.yaml"):
-        with open('.travis.yaml', 'a') as the_file:
-            the_file.write(_TRAVIS_YML.format(name=project_name))
+    project_name = args.init_project_name
+    formated_setup = _SETUP_PY.format(
+        name=project_name,
+        description="",
+        keywords="",
+        author="",
+        email="",
+        githublogin=""
+    )
+    formated_travis = _TRAVIS_YML.format(name=project_name)
+    formated_meta = _META_YML.format(name=project_name)
+    if args.dry_run:
+        print(formated_setup)
+        print(formated_travis)
+        print(formated_meta)
+    else:
+
+        if not op.exists(".condarc"):
+            with open('.condarc', 'a') as the_file:
+                the_file.write('channels:\n  - default\n#  - mjirik')
+        if not op.exists("setup.py"):
+            with open('setup.py', 'a') as the_file:
+                the_file.write(formated_setup)
+        if not op.exists("setup.cfg"):
+            with open('setup.cfg', 'a') as the_file:
+                the_file.write(_SETUP_CFG)
+        if not op.exists("meta.yaml"):
+            with open('meta.yaml', 'a') as the_file:
+                the_file.write(formated_meta)
+        if not op.exists(".travis.yaml"):
+            with open('.travis.yaml', 'a') as the_file:
+                the_file.write(formated_travis)
 
 
 def main():
@@ -447,7 +461,7 @@ def main():
         help="Available values are: 'init', 'patch', 'minor', 'major', 'stable' or 'upload' ",
         default=None)
     parser.add_argument(
-        "initprojectname",
+        "init_project_name",
         nargs='?',
         help="set project name in generated files if 'init' action is used",
         default="default_project")
@@ -487,6 +501,9 @@ def main():
     parser.add_argument(
         '-nc', '--no-conda', action='store_true',
         help='Do not process conda package')
+    parser.add_argument(
+        '--dry-run', action='store_true',
+        help='Do not create any files in init')
     args = parser.parse_args()
 
     if args.loglevel is not None:
@@ -495,6 +512,7 @@ def main():
     if args.debug:
         ch.setLevel(logging.DEBUG)
 
+    # print(dir(args))
     make(args)
 
 
