@@ -440,8 +440,8 @@ after_success:
         if not op.exists("meta.yaml"):
             with open('meta.yaml', 'a') as the_file:
                 the_file.write(formated_meta)
-        if not op.exists(".travis.yaml"):
-            with open('.travis.yaml', 'a') as the_file:
+        if not op.exists(".travis.yml"):
+            with open('.travis.yml', 'a') as the_file:
                 the_file.write(formated_travis)
 
 
