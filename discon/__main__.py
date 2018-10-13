@@ -401,8 +401,8 @@ before_install:
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
-    conda config --add channels mjirik
-    conda config --add channels conda-forge
+    - conda config --add channels mjirik
+    - conda config --add channels conda-forge
     - conda update -q conda
     # Useful for debugging any issues with conda
     - conda info -a
