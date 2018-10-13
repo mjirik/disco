@@ -410,7 +410,7 @@ before_install:
 # command to install dependencies
 install:
 
-    - conda install --yes pip nose coverage
+    - conda install --yes pip nose coveralls
 #    - Install dependencies
     - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
 #    - pip install -r requirements_pip.txt
