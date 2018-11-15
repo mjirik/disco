@@ -48,6 +48,8 @@ def check_git():
         exit()
 
 def make(args):
+    upload_conda = True
+    upload_pypi = True
     if not op.exists("build.sh"):
         with open('build.sh', 'a') as the_file:
             the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
@@ -72,14 +74,26 @@ def make(args):
         mycall("bumpversion " + args.action)
         mycall("git push")
         mycall("git push --tags")
+        if args.init_project_name is "pypi":
+            upload_conda = False
     elif args.action in ["upload"]:
         logger.debug("just upload to conda and pypi")
+    elif args.action in ["build_conda"]:
+        logger.debug("build conda based on meta.yaml")
+        upload_pypi = False
+    elif args.action in ["skeleton"]:
+        logger.debug("building skeleton")
+        package_name = args.init_project_name
+        mycall(["conda", "skeleton", "pypi", package_name])
+        return
     else:
         logger.error("Unkown command '"+ args.action + "'")
         return
+
 # fi
     # upload to pypi
-    pypi_build_and_upload(args)
+    if upload_pypi:
+        pypi_build_and_upload(args)
 
 
     pythons = args.py
@@ -88,7 +102,11 @@ def make(args):
     logger.debug("python versions " + str( args.py))
 
     for python_version in pythons:
-        conda_build_and_upload(python_version, args.channel)
+        if upload_conda:
+            package_name = args.init_project_name
+            if package_name is None:
+                package_name = "."
+            conda_build_and_upload(python_version, args.channel, package_name=package_name)
 
 def pypi_build_and_upload(args):
     pypi_upload = True
@@ -120,14 +138,14 @@ def pypi_build_and_upload(args):
         os.remove(onefile)
 
 
-
-def conda_build_and_upload(python_version, channels):
+def conda_build_and_upload(python_version, channels, package_name="."):
 
     logger.debug("conda build")
     logger.debug("build python_version :" + str( python_version))
+    python_short_version = python_version[0] + python_version[2]
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    conda_build_command = ["conda", "build", "--py", python_version,  "."]
+    conda_build_command = ["conda", "build", "--py", python_version,  package_name]
     for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
@@ -144,10 +162,12 @@ def conda_build_and_upload(python_version, channels):
     logger.debug(" ".join(cmd_convert))
     mycall(cmd_convert)
 
+    if package_name == ".":
+        package_name = ""
     logger.debug("binstar upload")
     # it could be ".tar.gz" or ".tar.bz2"
+    mycall("anaconda upload */*" + package_name + "*" +python_short_version + "*.tar.*z*")
     mycall(["anaconda", "upload", output_name])
-    mycall("anaconda upload */*.tar.*z*")
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
@@ -381,8 +401,8 @@ before_install:
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
-    conda config --add channels mjirik
-    conda config --add channels conda-forge
+    - conda config --add channels mjirik
+    - conda config --add channels conda-forge
     - conda update -q conda
     # Useful for debugging any issues with conda
     - conda info -a
