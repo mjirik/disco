@@ -390,7 +390,10 @@ before_install:
 # command to install dependencies
 install:
 
-    - conda install --yes pip nose coverage
+    # - sudo apt-get install -qq $(< apt_requirements.txt)
+    - conda create --yes -n travis pip nose python=$CONDA_PYTHON_VERSION
+    - source activate travis
+    - pip install python-coveralls
 #    - Install dependencies
     - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
 #    - pip install -r requirements_pip.txt
@@ -406,8 +409,9 @@ install:
 #    - 'echo "include /usr/local/lib" | sudo tee -a /etc/ld.so.conf'
 #    - 'sudo ldconfig -v'
 #    - conda list -e
+#    - python -m io3d.datasets -l 3Dircadb1.1 jatra_5mm exp_small sliver_training_001 io3d_sample_data head volumetrie
 # command to run tests
-script: nosetests --with-coverage --cover-package={name}
+script: nosetests -v --with-coverage --cover-package={name}
 after_success:
     - coveralls
 """
