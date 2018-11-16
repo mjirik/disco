@@ -411,9 +411,8 @@ before_install:
 install:
 
     # - sudo apt-get install -qq $(< apt_requirements.txt)
-    - conda create --yes -n travis pip nose python=$CONDA_PYTHON_VERSION
+    - conda create --yes -n travis pip nose coveralls python=$CONDA_PYTHON_VERSION
     - source activate travis
-    - pip install python-coveralls
 #    - Install dependencies
     - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
 #    - pip install -r requirements_pip.txt
