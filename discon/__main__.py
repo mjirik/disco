@@ -50,11 +50,14 @@ def check_git():
 def make(args):
     upload_conda = True
     upload_pypi = True
-    if not op.exists("build.sh"):
-        with open('build.sh', 'a') as the_file:
+    if not op.exists("conda-recipe"):
+        import os
+        os.makedirs("conda-recipe")
+    if not op.exists("coda-recipe/build.sh"):
+        with open('coda-recipe/build.sh', 'a') as the_file:
             the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
-    if not op.exists("bld.bat"):
-        with open('bld.bat', 'a') as the_file:
+    if not op.exists("coda-recipe/bld.bat"):
+        with open('coda-recipe/bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
     check_git()
@@ -138,7 +141,12 @@ def pypi_build_and_upload(args):
         os.remove(onefile)
 
 
-def conda_build_and_upload(python_version, channels, package_name="."):
+def conda_build_and_upload(python_version, channels, package_name=None):
+    if package_name is None:
+        if op.exists("conda-recipe/meta.yaml"):
+            package_name = "./conda-recipe/"
+        else:
+            package_name = "."
 
     logger.debug("conda build")
     logger.debug("build python_version :" + str( python_version))
@@ -296,7 +304,11 @@ source:
    # List any patch files here
    # - fix.patch
 
-# build:
+build:
+  ignore_prefix_files:
+    - devel
+    - examples
+  
   # noarch_python: True
   # preserve_egg_dir: True
   # entry_points:
