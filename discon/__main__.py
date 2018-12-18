@@ -50,14 +50,20 @@ def check_git():
 def make(args):
     upload_conda = True
     upload_pypi = True
+    if op.exists("meta.yaml"):
+        # old position of recipe
+        prefix = "conda-recipe/"
+    else:
+        prefix = ""
+
     if not op.exists("conda-recipe"):
         import os
         os.makedirs("conda-recipe")
-    if not op.exists("conda-recipe/build.sh"):
-        with open('conda-recipe/build.sh', 'a') as the_file:
+    if not op.exists(prefix + "build.sh"):
+        with open(prefix + 'build.sh', 'a') as the_file:
             the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
-    if not op.exists("conda-recipe/bld.bat"):
-        with open('conda-recipe/bld.bat', 'a') as the_file:
+    if not op.exists(prefix + "bld.bat"):
+        with open(prefix + 'bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
     check_git()
