@@ -53,11 +53,11 @@ def make(args):
     if not op.exists("conda-recipe"):
         import os
         os.makedirs("conda-recipe")
-    if not op.exists("coda-recipe/build.sh"):
-        with open('coda-recipe/build.sh', 'a') as the_file:
+    if not op.exists("conda-recipe/build.sh"):
+        with open('conda-recipe/build.sh', 'a') as the_file:
             the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
-    if not op.exists("coda-recipe/bld.bat"):
-        with open('coda-recipe/bld.bat', 'a') as the_file:
+    if not op.exists("conda-recipe/bld.bat"):
+        with open('conda-recipe/bld.bat', 'a') as the_file:
             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
 
     check_git()
