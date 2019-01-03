@@ -284,7 +284,7 @@ setup(
     _SETUP_CFG = """
 [bumpversion]
 current_version = 0.0.0
-files = setup.py meta.yaml
+files = setup.py conda-recipe/meta.yaml
 commit = True
 tag = True
 tag_name = {new_version}
