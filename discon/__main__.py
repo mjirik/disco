@@ -163,6 +163,7 @@ def conda_build_and_upload(python_version, channels, package_name=None):
     for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
+    conda_build_command.append("--no-anaconda-upload")
 
     mycall(conda_build_command)
     conda_build_command.append("--output")
