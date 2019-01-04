@@ -334,11 +334,14 @@ requirements:
   build:
     - python
     - setuptools
+    # - {{ pin_compatible('imma', max_pin='x.x') }}
 
   run:
     - python
+    # - {{ pin_compatible('imma', max_pin='x.x') }}
     # - numpy
-    # - pyqt 4.11.*
+    # - pyqt 4.11.* # [not win]
+    # - pyqt 4.12.2 # [win]
 
 test:
   # Python imports
