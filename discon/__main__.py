@@ -30,6 +30,7 @@ def mycall(command):
     else:
         subprocess.call(command, shell=True)
 
+
 def check_git():
     try:
         import git
@@ -77,14 +78,16 @@ def make(args):
         mycall("git checkout master")
         return
     elif args.action in ["minor", "major", "patch"]:
+        if not args.skip_git:
+            logger.debug("pull, patch, push, push --tags")
+            mycall("git pull")
         if args.skip_bumpversion:
             logger.info("skip bumpversion")
         else:
-            logger.debug("pull, patch, push, push --tags")
-            mycall("git pull")
             mycall("bumpversion " + args.action)
-            mycall("git push")
-            mycall("git push --tags")
+            if not args.skip_git:
+                mycall("git push")
+                mycall("git push --tags")
         # if args.init_project_name is "pypi":
         #     upload_conda = False
     elif args.action in ["stay"]:
@@ -573,6 +576,9 @@ def main():
     parser.add_argument(
         '-d', '--debug', action='store_true',
         help='Debug mode')
+    parser.add_argument(
+        '-sg', '--skip-git', action='store_true',
+        help='Skip git pull on beginning and git push after bumpversion.')
     parser.add_argument(
         '-sp', '--skip-pypi', action='store_true',
         help='Do not upload to pypi')
