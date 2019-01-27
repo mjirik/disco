@@ -232,7 +232,7 @@ setup(
     url='https://github.com/{githublogin}/{name}',
     author='{author}',
     author_email='{email}',
-    license='MIT',
+    license='{license}',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -281,6 +281,8 @@ setup(
     # have to be included in MANIFEST.in as well.
     # package_data={{
     #     'sample': ['package_data.dat'],
+    #     If any package contains *.txt or *.rst files, include them:
+    #     '': ['*.txt', '*.xml', '*.special', '*.huh'],
     # }},
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -310,7 +312,7 @@ tag = True
 tag_name = {new_version}
 
 [nosetests]
-attr = !interactive,!slow,!LAR
+attr = !interactive,!slow
 """
 
     _META_YML = """package:
