@@ -130,7 +130,7 @@ def pypi_build_and_upload(args):
         # preregistration is no longer required
         # mycall(["python", "setup.py", "register", "-r", "pypi"])
         if args.skip_upload:
-            cmd = ["python", "setup.py", "sdist", "-r", "pypi"]
+            cmd = ["python", "setup.py", "sdist"]
         else:
             cmd = ["python", "setup.py", "sdist", "upload", "-r", "pypi"]
         mycall(cmd)
