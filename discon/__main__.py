@@ -7,8 +7,9 @@
 # Distributed under terms of the %LICENSE% license.
 
 """
-Push project to pypi and binstar (Anaconda)
-
+Tool for easy push project to pypi and binstar (Anaconda).
+Git pull, bumpversion, pip build and upload, conda build and upload and git push is performed.
+There is also option to init new project directory.
 
 """
 
@@ -48,8 +49,6 @@ def check_git():
         exit()
 
 def make(args):
-    upload_conda = True
-    upload_pypi = True
     if op.exists("meta.yaml"):
         # old position of recipe
         prefix = "conda-recipe/"
@@ -78,21 +77,24 @@ def make(args):
         mycall("git checkout master")
         return
     elif args.action in ["minor", "major", "patch"]:
-        logger.debug("pull, patch, push, push --tags")
-        mycall("git pull")
-        mycall("bumpversion " + args.action)
-        mycall("git push")
-        mycall("git push --tags")
-        if args.init_project_name is "pypi":
-            upload_conda = False
-    elif args.action in ["upload"]:
-        logger.debug("just upload to conda and pypi")
-    elif args.action in ["build_conda"]:
-        logger.debug("build conda based on meta.yaml")
-        upload_pypi = False
+        if args.skip_bumpversion:
+            logger.info("skip bumpversion")
+        else:
+            logger.debug("pull, patch, push, push --tags")
+            mycall("git pull")
+            mycall("bumpversion " + args.action)
+            mycall("git push")
+            mycall("git push --tags")
+        # if args.init_project_name is "pypi":
+        #     upload_conda = False
+    elif args.action in ["stay"]:
+        logger.debug("stay on version")
+    # elif args.action in ["build_conda"]:
+    #     logger.debug("build conda based on meta.yaml")
+    #     process_pypi = False
     elif args.action in ["skeleton"]:
         logger.debug("building skeleton")
-        package_name = args.init_project_name
+        package_name = args.project_name
         mycall(["conda", "skeleton", "pypi", package_name])
         return
     else:
@@ -101,32 +103,37 @@ def make(args):
 
 # fi
     # upload to pypi
-    if upload_pypi:
+    if not args.skip_pypi:
         pypi_build_and_upload(args)
 
 
     pythons = args.py
     if len(args.py) == 0 or (len(args.py) > 0 and args.py in ("both", "all")):
         pythons = ["2.7", "3.6"]
-    logger.debug("python versions " + str( args.py))
+    logger.info("python versions " + str( args.py))
 
     for python_version in pythons:
-        if upload_conda:
+        if not args.skip_conda:
             package_name = args.init_project_name
             if package_name is None:
                 package_name = "."
             conda_build_and_upload(python_version, args.channel, package_name=package_name)
 
+
 def pypi_build_and_upload(args):
     pypi_upload = True
-    if args.no_pypi:
+    if args.skip_pypi:
         pypi_upload = False
 
     if pypi_upload:
         logger.info("pypi upload")
         # preregistration is no longer required
         # mycall(["python", "setup.py", "register", "-r", "pypi"])
-        mycall(["python", "setup.py", "sdist", "upload", "-r", "pypi"])
+        if args.skip_upload:
+            cmd = ["python", "setup.py", "sdist", "-r", "pypi"]
+        else:
+            cmd = ["python", "setup.py", "sdist", "upload", "-r", "pypi"]
+        mycall(cmd)
 
     # build conda and upload
     logger.debug("conda clean")
@@ -147,7 +154,7 @@ def pypi_build_and_upload(args):
         os.remove(onefile)
 
 
-def conda_build_and_upload(python_version, channels, package_name=None):
+def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False):
     if package_name is None:
         if op.exists("conda-recipe/meta.yaml"):
             package_name = "./conda-recipe/"
@@ -179,10 +186,14 @@ def conda_build_and_upload(python_version, channels, package_name=None):
 
     if package_name == ".":
         package_name = ""
-    logger.debug("binstar upload")
-    # it could be ".tar.gz" or ".tar.bz2"
-    mycall("anaconda upload */*" + package_name + "*" +python_short_version + "*.tar.*z*")
-    mycall(["anaconda", "upload", output_name])
+
+    if skip_upload:
+        logger.info("skip upload conda")
+    else:
+        logger.debug("binstar upload")
+        # it could be ".tar.gz" or ".tar.bz2"
+        mycall("anaconda upload */*" + package_name + "*" + python_short_version + "*.tar.*z*")
+        mycall(["anaconda", "upload", output_name])
 
     logger.debug("rm files")
     dr = glob.glob("win-*")
@@ -457,7 +468,7 @@ script: nosetests -v --with-coverage --cover-package={name}
 after_success:
     - coveralls
 """
-    project_name = args.init_project_name
+    project_name = args.project_name
     formated_setup = _SETUP_PY.format(
         name=project_name,
         description="",
@@ -513,12 +524,18 @@ def main():
     )
     parser.add_argument(
         "action",
-        help="Available values are: 'init', 'patch', 'minor', 'major', 'stable' or 'upload' ",
+        help="Available values are: 'init', 'stay', 'patch', 'minor', 'major' or 'stable'. "
+            "Git pull is performed in the beginning. "
+            "If 'init' is used the project directory with all necessary files is prepared and app quits. "
+            "Version number will be increased with bumpversion if option 'patch', 'minor' and 'major' is used. "
+            "Command 'stay' causes skipping of the bumpversion. Comands 'stay', 'patch', 'minor' and 'major' "
+            "build PyPi and conda package and upload it to the server. The changes are then pushed to git."
+        ,
         default=None)
     parser.add_argument(
-        "init_project_name",
+        "project_name",
         nargs='?',
-        help="set project name in generated files if 'init' action is used",
+        help="project directory (with setup.py) or new project name if 'init' action is used",
         default="default_project")
     parser.add_argument("--py",
             # default="2.7",
@@ -526,12 +543,13 @@ def main():
             action="append",
             default=[],
             # default="all",
-            help="specify python version. '--py 2.7' or '--py both' for python 3.6 and 2.7" )
+            help="specify python version. '--py 2.7' or '--py both' for python 3.6 and 2.7. "
+                 "Parameter can be used multiple times.")
     parser.add_argument(
         "-c", "--channel",
         nargs=1,
         action="append",
-        help="Add conda channel",
+        help="Add conda channel. Can be used multiple times.",
         default=[])
     # parser.add_argument(
     #     "arg2",
@@ -551,11 +569,17 @@ def main():
         '-d', '--debug', action='store_true',
         help='Debug mode')
     parser.add_argument(
-        '-np', '--no-pypi', action='store_true',
+        '-sp', '--skip-pypi', action='store_true',
         help='Do not upload to pypi')
     parser.add_argument(
-        '-nc', '--no-conda', action='store_true',
+        '-sc', '--skip-conda', action='store_true',
         help='Do not process conda package')
+    parser.add_argument(
+        '-sb', '--skip-bumpversion', action='store_true',
+        help='Do not build and upload pypi package')
+    parser.add_argument(
+        '-su', '--skip-upload', action='store_true',
+        help='Do not upload to pypi and conda')
     parser.add_argument(
         '--dry-run', action='store_true',
         help='Do not create any files in init')
