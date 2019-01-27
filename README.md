@@ -30,13 +30,14 @@ Login to anaconda:
 
 
 ## Project directory
-You will need `setup.py`, `meta.yaml` and `setup.cfg` in your python
-project directory. Files can be generated with `init`.
+You will need `setup.py`,  and `setup.cfg` in your python
+project directory. Conda recipe files like `meta.yaml` should be in `conda-recipe` directory.
  
-There also may be `bld.bat` and `build.sh`. These
-files are created if they are not exist.
+There also may be `bld.bat` and `build.sh` in `conda-recipe` dir. These
+files are created if they do not exist.
 
-Conda channels should
+All files can be generated with `init`.
+
 
 
 
@@ -52,9 +53,18 @@ or
 
 Create and upload new patch, minor or major version
 
-    python -m discon patch
-    python -m discon minor
-    python -m discon major -c some_channel
+    python -m discon patch .
+    python -m discon minor .
+    python -m discon major . -c some_channel
+    
+You can stay on actual version and just build and upload package
+
+    python -m discon stay .
+    
+Every particular step can be skipped by parameter. Read help for more info
+
+
+    python -m discon --skip-upload patch . 
 
 
 Push your git `master` branch to `stable` branch
