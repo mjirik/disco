@@ -114,7 +114,7 @@ def make(args):
 
     for python_version in pythons:
         if not args.skip_conda:
-            package_name = args.init_project_name
+            package_name = args.project_name
             if package_name is None:
                 package_name = "."
             conda_build_and_upload(python_version, args.channel, package_name=package_name)
