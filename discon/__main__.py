@@ -222,9 +222,13 @@ from setuptools import setup, find_packages
 from os import path
 
 here = path.abspath(path.dirname(__file__))
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='{name}',
     description='{description}',
+    long_description=long_description,
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
