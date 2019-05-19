@@ -192,7 +192,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     conda_build_command.append("--output")
     # output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
     logger.debug(" ".join(conda_build_command))
-    output_name_lines = subprocess.check_output(conda_build_command)
+    output_name_lines = subprocess.check_output(conda_build_command).decode()
     # get last line of output
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
