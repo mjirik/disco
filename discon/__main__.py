@@ -30,7 +30,7 @@ def mycall(command, ignore_error=True):
     if type(command) is list:
         try:
             # subprocess.call(command)
-            subprocess.call_output(command)
+            subprocess.check_call(command)
         except subprocess.CalledProcessError as e:
             if ignore_error:
                 logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
@@ -39,7 +39,7 @@ def mycall(command, ignore_error=True):
     else:
         try:
             # subprocess.call(command, shell=True)
-            subprocess.call_output(command, shell=True)
+            subprocess.check_call(command, shell=True)
         except subprocess.CalledProcessError as e:
             if ignore_error:
                 logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
