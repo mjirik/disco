@@ -75,3 +75,8 @@ Push your git `master` branch to `stable` branch
     python -m discon stable
 
 
+
+# Build
+
+    conda build -c conda-forge .
+
