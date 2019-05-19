@@ -24,19 +24,25 @@ import shutil
 import glob
 
 
-def mycall(command):
+def mycall(command, ignore_error=True):
     if type(command) is list:
         try:
             # subprocess.call(command)
             subprocess.call_output(command)
         except subprocess.CalledProcessError as e:
-            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            if ignore_error:
+                logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            else:
+                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
     else:
         try:
             # subprocess.call(command, shell=True)
             subprocess.call_output(command, shell=True)
         except subprocess.CalledProcessError as e:
-            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            if ignore_error:
+                logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            else:
+                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
 
 def check_git():
@@ -106,7 +112,7 @@ def make(args):
     elif args.action in ["skeleton"]:
         logger.debug("building skeleton")
         package_name = args.project_name
-        mycall(["conda", "skeleton", "pypi", package_name])
+        mycall(["conda", "skeleton", "pypi", package_name], ignore_error=False)
         return
     else:
         logger.error("Unkown command '"+ args.action + "'")
@@ -188,7 +194,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
         conda_build_command.append(channel[0])
     conda_build_command.append("--no-anaconda-upload")
 
-    mycall(conda_build_command)
+    mycall(conda_build_command, ignore_error=False)
     conda_build_command.append("--output")
     # output_name_lines = subprocess.check_output(["conda", "build", "--python", python_version, "--output", "."])
     logger.debug(" ".join(conda_build_command))
