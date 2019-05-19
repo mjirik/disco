@@ -23,6 +23,8 @@ import os.path as op
 import shutil
 import glob
 
+__version__ = "1.8.3"
+
 
 def mycall(command, ignore_error=True):
     if type(command) is list:
@@ -580,6 +582,10 @@ def main():
         action="append",
         help="Add conda channel. Can be used multiple times.",
         default=[])
+    parser.add_argument(
+        "-V", "--version", action='store_true',
+        help="Print version number",
+        default=False)
     # parser.add_argument(
     #     "arg2",
     #     required=False,
@@ -617,11 +623,15 @@ def main():
         help='Do not create any files in init')
     args = parser.parse_args()
 
+
     if args.loglevel is not None:
         ch.setLevel(args.loglevel)
 
     if args.debug:
         ch.setLevel(logging.DEBUG)
+
+    if args.version:
+        print(__version__)
 
     # print(dir(args))
     make(args)
