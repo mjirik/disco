@@ -4,7 +4,7 @@ Push python project to pypi and conda server
 ## Prerequisities
 
     conda install conda-build anaconda-client
-    apt-get install bumpversion
+    conda install -c conda-forge bumpversion
 
 
 ## Install
