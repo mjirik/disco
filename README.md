@@ -11,6 +11,9 @@ Push python project to pypi and conda server
 
     conda install -c mjirik -c conda-forge discon
 
+### Always upload
+
+    conda config --set anaconda_upload yes
 
 ## Required user accounts
 
@@ -26,7 +29,7 @@ https://anaconda.org/account/
 
 Login to anaconda:
 
-    binstar login
+    anaconda login
 
 
 ## Project directory
