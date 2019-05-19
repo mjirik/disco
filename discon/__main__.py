@@ -26,9 +26,17 @@ import glob
 
 def mycall(command):
     if type(command) is list:
-        subprocess.call(command)
+        try:
+            # subprocess.call(command)
+            subprocess.call_output(command)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
     else:
-        subprocess.call(command, shell=True)
+        try:
+            # subprocess.call(command, shell=True)
+            subprocess.call_output(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
 
 def check_git():
