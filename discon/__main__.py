@@ -506,7 +506,8 @@ after_success:
         keywords="",
         author="",
         email="",
-        githublogin=""
+        githublogin="",
+        license=""
     )
     formated_travis = _TRAVIS_YML.format(name=project_name)
     formated_meta = _META_YML.format(name=project_name)
