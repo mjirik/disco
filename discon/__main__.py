@@ -25,7 +25,7 @@ import glob
 from pathlib import Path
 from . import file_content
 
-__version__ = "1.11.3"
+__version__ = "1.11.4"
 
 
 def mycall(command, ignore_error=True):
