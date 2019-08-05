@@ -38,9 +38,11 @@ requirements:
     - conda-build
     - anaconda-client
     - gitpython
+    - bumpversion
 
   run:
     - python
+    - setuptools
     - conda-build
     - anaconda-client
     - gitpython

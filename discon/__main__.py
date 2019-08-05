@@ -23,7 +23,7 @@ import os.path as op
 import shutil
 import glob
 
-__version__ = "1.8.3"
+__version__ = "1.11.3"
 
 
 def mycall(command, ignore_error=True):
