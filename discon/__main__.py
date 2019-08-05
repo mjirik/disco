@@ -261,7 +261,7 @@ def make_init(project_name:str, author:str, email:str, license:str,
     conda_recipe_path = Path("conda-recipe/")
 
     project_name = project_name
-    formated_setup = file_content._SETUP_PY.format(
+    fmt = dict(
         name=project_name,
         description=description,
         keywords="",
@@ -270,8 +270,9 @@ def make_init(project_name:str, author:str, email:str, license:str,
         githublogin=githublogin,
         license=license
     )
-    formated_travis = file_content._TRAVIS_YML.format(name=project_name)
-    formated_meta = file_content._META_YML.format(name=project_name)
+    formated_setup = file_content._SETUP_PY.format(**fmt)
+    formated_travis = file_content._TRAVIS_YML.format(**fmt)
+    formated_meta = file_content._META_YML.format(**fmt)
     if dry_run:
         print(formated_setup)
         print(formated_travis)
