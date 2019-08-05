@@ -39,6 +39,7 @@ requirements:
     - anaconda-client
     - gitpython
     - bumpversion
+    - click
 
   run:
     - python
@@ -47,6 +48,7 @@ requirements:
     - anaconda-client
     - gitpython
     - bumpversion
+    - click
 
 test:
   # Python imports

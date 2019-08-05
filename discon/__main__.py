@@ -233,22 +233,42 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
         shutil.rmtree(onedir)
 
 def init(args):
+    import click
+    import git
+    project_name = click.prompt("Project name: ", default=args.project_name, type=str)
+
+    globalconfig = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=True)
+    git_user_name = globalconfig.get_value("user", "name")
+    git_user_email = globalconfig.get_value("user", "email")
+
+
+    githublogin = click.prompt("GitHub login: ", type=str)
+    author = click.prompt("Author: ", default=git_user_name, type=str)
+    email = click.prompt("Email: ", default=git_user_email, type=str)
+    description = click.prompt("Project description: ", default="", type=str)
+    license_str = click.prompt("License: ", default="MIT", type=str)
+    make_init(
+        project_name, author=author, email=email, license=license_str, githublogin=githublogin,
+        description=description, dry_run=args.dry_run
+    )
 
     pass
 
 
-def make_init(project_name:str, dry_run:bool):
+def make_init(project_name:str, author:str, email:str, license:str,
+              githublogin:str, description:str,
+              dry_run:bool):
     conda_recipe_path = "./conda-recipe"
 
     project_name = project_name
     formated_setup = file_content._SETUP_PY.format(
         name=project_name,
-        description="",
+        description=description,
         keywords="",
-        author="",
-        email="",
-        githublogin="",
-        license=""
+        author=author,
+        email=email,
+        githublogin=githublogin,
+        license=license
     )
     formated_travis = file_content._TRAVIS_YML.format(name=project_name)
     formated_meta = file_content._META_YML.format(name=project_name)
