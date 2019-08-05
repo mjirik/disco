@@ -110,7 +110,7 @@ _META_YML = """package:
 source:
 # this is used for build from git hub
   git_rev: 0.0.0
-  git_url: https://github.com/mjirik/{name}.git
+  git_url: https://github.com/{githublogin}/{name}.git
 
 # this is used for pypi
   # fn: io3d-1.0.30.tar.gz
@@ -171,9 +171,9 @@ test:
     # - nose
 
 about:
-  home: https://github.com/mjirik/{name}
-  license: BSD License
-  summary: 'distribution to pypi and conda'
+  home: https://github.com/{githublogin}/{name}
+  license: {license}
+  summary: {description}
 
 # See
 # http://docs.continuum.io/conda/build.html for
