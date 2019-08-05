@@ -258,7 +258,7 @@ def init(args):
 def make_init(project_name:str, author:str, email:str, license:str,
               githublogin:str, description:str,
               dry_run:bool):
-    conda_recipe_path = "./conda-recipe"
+    conda_recipe_path = Path("conda-recipe/")
 
     project_name = project_name
     formated_setup = file_content._SETUP_PY.format(
@@ -287,8 +287,8 @@ def make_init(project_name:str, author:str, email:str, license:str,
         if not op.exists("setup.cfg"):
             with open('setup.cfg', 'a') as the_file:
                 the_file.write(file_content._SETUP_CFG)
-        if not op.exists("meta.yaml"):
-            with open('meta.yaml', 'a') as the_file:
+        if not op.exists(conda_recipe_path / "meta.yaml"):
+            with open(conda_recipe_path / 'meta.yaml', 'a') as the_file:
                 the_file.write(formated_meta)
         if not op.exists(".travis.yml"):
             with open('.travis.yml', 'a') as the_file:
