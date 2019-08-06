@@ -254,10 +254,11 @@ def init(args):
 
     pass
 
+
 def create_file(fn, content, interactive=True):
     import click
     if not op.exists(fn) or click.confirm(f"Rewrite file '{str(fn)}'?"):
-        with open(fn, 'a') as the_file:
+        with open(fn, 'w') as the_file:
             the_file.write(content)
 
 
