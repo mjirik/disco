@@ -254,6 +254,12 @@ def init(args):
 
     pass
 
+def create_file(fn, content, interactive=True):
+    import click
+    if not op.exists(fn) or click.confirm(f"Rewrite file '{str(fn)}'?"):
+        with open(fn, 'a') as the_file:
+            the_file.write(content)
+
 
 def make_init(project_name:str, author:str, email:str, license:str,
               githublogin:str, description:str,
@@ -279,21 +285,26 @@ def make_init(project_name:str, author:str, email:str, license:str,
         print(formated_meta)
     else:
 
-        if not op.exists(".condarc"):
-            with open('.condarc', 'a') as the_file:
-                the_file.write('channels:\n  - default\n#  - mjirik')
-        if not op.exists("setup.py"):
-            with open('setup.py', 'a') as the_file:
-                the_file.write(formated_setup)
-        if not op.exists("setup.cfg"):
-            with open('setup.cfg', 'a') as the_file:
-                the_file.write(file_content._SETUP_CFG)
-        if not op.exists(conda_recipe_path / "meta.yaml"):
-            with open(conda_recipe_path / 'meta.yaml', 'a') as the_file:
-                the_file.write(formated_meta)
-        if not op.exists(".travis.yml"):
-            with open('.travis.yml', 'a') as the_file:
-                the_file.write(formated_travis)
+        create_file(".condarc", 'channels:\n  - default\n#  - mjirik')
+        create_file("setup.py", formated_setup)
+        create_file("setup.cfg", file_content._SETUP_CFG)
+        create_file(conda_recipe_path / "meta.yaml", formated_meta)
+        create_file(conda_recipe_path / ".travis.yml", formated_travis)
+        # if not op.exists(".condarc"):
+        #     with open('.condarc', 'a') as the_file:
+        #         the_file.write('channels:\n  - default\n#  - mjirik')
+        # if not op.exists("setup.py"):
+        #     with open('setup.py', 'a') as the_file:
+        #         the_file.write(formated_setup)
+        # if not op.exists("setup.cfg"):
+        #     with open('setup.cfg', 'a') as the_file:
+        #         the_file.write(file_content._SETUP_CFG)
+        # if not op.exists(conda_recipe_path / "meta.yaml"):
+        #     with open(conda_recipe_path / 'meta.yaml', 'a') as the_file:
+        #         the_file.write(formated_meta)
+        # if not op.exists(".travis.yml"):
+        #     with open('.travis.yml', 'a') as the_file:
+        #         the_file.write(formated_travis)
 
 
 def main():
