@@ -218,19 +218,19 @@ before_script:
 before_install:
     - sudo apt-get update
     - sudo apt-get install -qq cmake libinsighttoolkit3-dev libpng12-dev libgdcm2-dev
-
+    
+    - wget http://home.zcu.cz/~mjirik/lisa/install/install_conda.sh && source install_conda.sh
     # We do this conditionally because it saves us some downloading if the
     # version is the same.
-    - if [[ "$CONDA_PYTHON_VERSION" == "2.7" ]]; then
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-      else
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-      fi
-#    - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    # - if [[ "$CONDA_PYTHON_VERSION" == "2.7" ]]; then
+    #     echo "python 2"
+    #   else
+    #     echo "python 3"
+    #   fi
 #    - chmod +x miniconda.sh
 #    - ./miniconda.sh -b
-    - bash miniconda.sh -b -p $HOME/miniconda
-    - export PATH="$HOME/miniconda/bin:$PATH"
+#     - bash miniconda.sh -b -p $HOME/miniconda
+#     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
     - conda config --add channels mjirik
@@ -247,6 +247,7 @@ install:
     - source activate travis
 #    - Install dependencies
     - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
+    - conda install --yes pip nose coveralls pytest pytest-cov
 #    - pip install -r requirements_pip.txt
 #    - "echo $LD_LIBRARY_PATH"
 #    - "pip install -r requirements.txt"
@@ -262,7 +263,10 @@ install:
 #    - conda list -e
 #    - python -m io3d.datasets -l 3Dircadb1.1 jatra_5mm exp_small sliver_training_001 io3d_sample_data head volumetrie
 # command to run tests
-script: nosetests -v --with-coverage --cover-package={name}
+# script: nosetests -v --with-coverage --cover-package={name}
+
+script:
+  - python -m pytest --cov={name}/
 after_success:
     - coveralls
 """
