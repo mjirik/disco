@@ -218,6 +218,7 @@ env:
 matrix:
   allow_failures:
     - env: CONDA_PYTHON_VERSION=2.7
+    - env: CONDA_PYTHON_VERSION=3.7
   fast_finish: true
 # virtualenv:
 #   system_site_packages: true
