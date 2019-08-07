@@ -205,8 +205,9 @@ sudo: required
 #    sources:
 #      - kalakris-cmake
 env:
-    - CONDA_PYTHON_VERSION=2.7
+    # - CONDA_PYTHON_VERSION=2.7
     - CONDA_PYTHON_VERSION=3.6
+    - CONDA_PYTHON_VERSION=3.7
 virtualenv:
   system_site_packages: true
 before_script:
@@ -227,10 +228,6 @@ before_install:
     #   else
     #     echo "python 3"
     #   fi
-#    - chmod +x miniconda.sh
-#    - ./miniconda.sh -b
-#     - bash miniconda.sh -b -p $HOME/miniconda
-#     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
     - conda config --add channels mjirik
