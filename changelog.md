@@ -2,6 +2,11 @@
 
 
 
+= 2.1
+
+- [added] markers used
+- [added] config to skip interactive and slow tests
+
 = 2.0
 
 - [changed] requre python 3
