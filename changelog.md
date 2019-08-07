@@ -6,6 +6,7 @@
 
 - [added] markers used
 - [added] config to skip interactive and slow tests
+- [added] sample test with pytest
 
 = 2.0
 

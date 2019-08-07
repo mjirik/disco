@@ -255,9 +255,10 @@ def init(args):
     pass
 
 
-def create_file(fn, content, interactive=True):
+def create_file(fn:Path, content, interactive=True):
     import click
     if not op.exists(fn) or click.confirm(f"Rewrite file '{str(fn)}'?"):
+        fn.mkdir(parents=True, exist_ok=True)
         with open(fn, 'w') as the_file:
             the_file.write(content)
 
@@ -286,11 +287,13 @@ def make_init(project_name:str, author:str, email:str, license:str,
         print(formated_meta)
     else:
 
-        create_file(".condarc", 'channels:\n  - default\n#  - mjirik')
-        create_file("setup.py", formated_setup)
-        create_file("setup.cfg", file_content._SETUP_CFG)
+        create_file(Path(".condarc"), 'channels:\n  - default\n#  - mjirik')
+        create_file(Path("setup.py"), formated_setup)
+        create_file(Path("setup.cfg"), file_content._SETUP_CFG)
         create_file(conda_recipe_path / "meta.yaml", formated_meta)
-        create_file(".travis.yml", formated_travis)
+        create_file(Path(".travis.yml"), formated_travis)
+        create_file(Path("tests/{name}_test.py"), file_content._TESTS_MAIN_PY)
+
         # if not op.exists(".condarc"):
         #     with open('.condarc', 'a') as the_file:
         #         the_file.write('channels:\n  - default\n#  - mjirik')
