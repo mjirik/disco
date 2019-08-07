@@ -99,8 +99,14 @@ commit = True
 tag = True
 tag_name = {new_version}
 
-[nosetests]
-attr = !interactive,!slow
+# [nosetests]
+# attr = !interactive,!slow
+
+[tool:pytest]
+addopts = -m "not interactive and not slow"
+markers =
+    interactive: marks interactive tests
+    slow: marks slow tests
 """
 
 _META_YML = """package:
