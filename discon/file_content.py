@@ -296,3 +296,14 @@ def inc(x):
 def test_answer():
     assert inc(3) == 5
 """
+
+README_MD = """\
+  
+[![Build Status](https://travis-ci.org/{githublogin}/{name}.svg?branch=master)](https://travis-ci.org/{githublogin}/{name})
+[![Coverage Status](https://coveralls.io/repos/github/{githublogin}/{name}/badge.svg?branch=master)](https://coveralls.io/github/{githublogin}/{name}?branch=master)
+
+{name}
+
+{description}
+
+"""

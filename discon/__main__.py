@@ -293,6 +293,7 @@ def make_init(project_name:str, author:str, email:str, license:str,
         create_file(conda_recipe_path / "meta.yaml", formated_meta)
         create_file(Path(".travis.yml"), formated_travis)
         create_file(Path("tests/{name}_test.py"), file_content._TESTS_MAIN_PY)
+        create_file(Path("README.md"), file_content.README_MD.format(**fmt))
 
         # if not op.exists(".condarc"):
         #     with open('.condarc', 'a') as the_file:

@@ -1,6 +1,10 @@
 # Changelog
 
 
+= 2.2
+
+- [added] README.md generated with badges
+
 
 = 2.1
 
