@@ -214,13 +214,21 @@ env:
     # - CONDA_PYTHON_VERSION=2.7
     - CONDA_PYTHON_VERSION=3.6
     - CONDA_PYTHON_VERSION=3.7
-virtualenv:
-  system_site_packages: true
+
+matrix:
+  allow_failures:
+    - env: CONDA_PYTHON_VERSION=2.7
+  fast_finish: true
+# virtualenv:
+#   system_site_packages: true
 before_script:
     # GUI
     - "export DISPLAY=:99.0"
-    - "sh -e /etc/init.d/xvfb start"
-    - sleep 3 # give xvfb sume time to start
+before_script:
+    # GUI
+    - "export DISPLAY=:99.0"
+    # - "sh -e /etc/init.d/xvfb start"
+    # - sleep 3 # give xvfb sume time to start
 
 before_install:
     - sudo apt-get update
