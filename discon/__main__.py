@@ -290,7 +290,7 @@ def make_init(project_name:str, author:str, email:str, license:str,
         create_file("setup.py", formated_setup)
         create_file("setup.cfg", file_content._SETUP_CFG)
         create_file(conda_recipe_path / "meta.yaml", formated_meta)
-        create_file(conda_recipe_path / ".travis.yml", formated_travis)
+        create_file(".travis.yml", formated_travis)
         # if not op.exists(".condarc"):
         #     with open('.condarc', 'a') as the_file:
         #         the_file.write('channels:\n  - default\n#  - mjirik')
