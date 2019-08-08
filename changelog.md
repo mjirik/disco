@@ -1,7 +1,7 @@
 # Changelog
 
 
-= 2.2
+= 2.3
 
 - [added] README.md generated with badges
 
