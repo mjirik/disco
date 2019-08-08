@@ -310,6 +310,8 @@ README_MD = """\
   
 [![Build Status](https://travis-ci.org/{githublogin}/{name}.svg?branch=master)](https://travis-ci.org/{githublogin}/{name})
 [![Coverage Status](https://coveralls.io/repos/github/{githublogin}/{name}/badge.svg?branch=master)](https://coveralls.io/github/{githublogin}/{name}?branch=master)
+[![PyPI version](https://badge.fury.io/py/{name}.svg)](http://badge.fury.io/py/{name})
+
 
 {name}
 
