@@ -258,7 +258,7 @@ def init(args):
 def create_file(fn:Path, content, interactive=True):
     import click
     if not op.exists(fn) or click.confirm(f"Rewrite file '{str(fn)}'?"):
-        fn.mkdir(parents=True, exist_ok=True)
+        fn.parents[0].mkdir(parents=True, exist_ok=True)
         with open(fn, 'w') as the_file:
             the_file.write(content)
 
