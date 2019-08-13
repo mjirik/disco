@@ -244,6 +244,8 @@ before_install:
     - conda config --set always_yes yes --set changeps1 no
     - conda config --add channels mjirik
     - conda config --add channels conda-forge
+    - conda config --add channels SimpleITK
+    - conda config --add channels luispedro
     - conda update -q conda
     # Useful for debugging any issues with conda
     - conda info -a
@@ -255,8 +257,7 @@ install:
     - conda create --yes -n travis pip nose coveralls python=$CONDA_PYTHON_VERSION
     - source activate travis
 #    - Install dependencies
-    - conda install --yes -c SimpleITK -c luispedro -c mjirik --file requirements_conda.txt
-    - conda install --yes pip nose coveralls pytest pytest-cov
+    - conda install --yes --file requirements_conda.txt pytest-cov
 #    - pip install -r requirements_pip.txt
 #    - "echo $LD_LIBRARY_PATH"
 #    - "pip install -r requirements.txt"
