@@ -199,7 +199,11 @@ $PYTHON setup.py install
 """
 
 _TRAVIS_YML="""language: python
-os: linux
+python: 2.7
+os: 
+  - linux
+  # - osx
+  # - windows
 # Ubuntu 14.04 Trusty support
 sudo: required
 # dist: trusty
