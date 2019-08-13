@@ -215,6 +215,8 @@ env:
     - CONDA_PYTHON_VERSION=3.6
     - CONDA_PYTHON_VERSION=3.7
 
+services:
+  - xvfb
 matrix:
   allow_failures:
     - env: CONDA_PYTHON_VERSION=2.7
@@ -225,11 +227,6 @@ matrix:
 before_script:
     # GUI
     - "export DISPLAY=:99.0"
-before_script:
-    # GUI
-    - "export DISPLAY=:99.0"
-    # - "sh -e /etc/init.d/xvfb start"
-    # - sleep 3 # give xvfb sume time to start
 
 before_install:
     - sudo apt-get update
@@ -277,10 +274,8 @@ install:
 # command to run tests
 # script: nosetests -v --with-coverage --cover-package={name}
 
-script:
-  - python -m pytest --cov={name}/
-after_success:
-    - coveralls
+script: python -m pytest --cov={name}/
+after_success: coveralls
 """
 
 _TESTS_MAIN_PY = """\
