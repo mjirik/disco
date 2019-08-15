@@ -127,6 +127,7 @@ source:
    # - fix.patch
 
 build:
+  noarch: python
   ignore_prefix_files:
     - devel
     - examples
