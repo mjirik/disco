@@ -192,11 +192,16 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     python_short_version = python_version[0] + python_version[2]
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    conda_build_command = ["conda", "build", "--py", python_version,  package_name]
+    if python_version == "noarch":
+        conda_build_command = ["conda", "build", package_name]
+    else:
+        conda_build_command = ["conda", "build", "--py", python_version,  package_name]
     for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
-    conda_build_command.append("--no-anaconda-upload")
+    if python_version != "noarch":
+        conda_build_command.append("--no-anaconda-upload")
+        skip_upload = True
 
     mycall(conda_build_command, ignore_error=False)
     conda_build_command.append("--output")
@@ -207,8 +212,9 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
     cmd_convert = ["conda", "convert", "-p", "all", output_name]
-    logger.debug(" ".join(cmd_convert))
-    mycall(cmd_convert)
+    if python_version != "noarch":
+        logger.debug(" ".join(cmd_convert))
+        mycall(cmd_convert)
 
     if package_name == ".":
         package_name = ""
