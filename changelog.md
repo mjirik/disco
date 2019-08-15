@@ -3,6 +3,9 @@
 = 2.4
 
 - [Changed] Use miniconda2 if CONDA_PYTHON_VERSION is set to 2.7
+- [Added] Noarch build conda in meta.yaml
+- [Added] Travis matrix configuration for osx and linux
+- [Fixed] Test file name
 
 = 2.3
 
