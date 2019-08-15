@@ -222,9 +222,21 @@ env:
 services:
   - xvfb
 matrix:
+  include:
+    - os: osx
+      language: minimal
+      name: osx python36
+      env:
+        - CONDA_PYTHON_VERSION=3.6
+    - os: osx
+      language: minimal
+      name: osx python37
+      env:
+        - CONDA_PYTHON_VERSION=3.7
   allow_failures:
     - env: CONDA_PYTHON_VERSION=2.7
     - env: CONDA_PYTHON_VERSION=3.7
+    # - os: windows
   fast_finish: true
 # virtualenv:
 #   system_site_packages: true
