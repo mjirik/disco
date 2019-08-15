@@ -236,7 +236,8 @@ before_install:
     - sudo apt-get update
     - sudo apt-get install -qq cmake libinsighttoolkit3-dev libpng12-dev libgdcm2-dev
     
-    - wget http://home.zcu.cz/~mjirik/lisa/install/install_conda.sh && source install_conda.sh
+    # - wget http://home.zcu.cz/~mjirik/lisa/install/install_conda.sh && source install_conda.sh
+    - wget https://raw.githubusercontent.com/mjirik/discon/master/tools/install_conda.sh && source install_conda.sh
     # We do this conditionally because it saves us some downloading if the
     # version is the same.
     # - if [[ "$CONDA_PYTHON_VERSION" == "2.7" ]]; then

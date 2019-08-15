@@ -1,5 +1,8 @@
 # Changelog
 
+= 2.4
+
+- [Changed] Use miniconda2 if CONDA_PYTHON_VERSION is set to 2.7
 
 = 2.3
 
