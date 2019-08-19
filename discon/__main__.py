@@ -199,9 +199,13 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
-    if python_version != "noarch":
-        conda_build_command.append("--no-anaconda-upload")
+    if python_version == "noarch":
+        if skip_upload:
+            conda_build_command.append("--no-anaconda-upload")
         skip_upload = True
+    else:
+        # upload in the end
+        conda_build_command.append("--no-anaconda-upload")
 
     mycall(conda_build_command, ignore_error=False)
     conda_build_command.append("--output")
