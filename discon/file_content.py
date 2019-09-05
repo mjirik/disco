@@ -60,7 +60,9 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    install_requires=['numpy', 'conda'],
+    install_requires=[
+    # 'numpy', 'conda'
+    ],
     # 'SimpleITK'],  # Removed becaouse of errors when pip is installing
     dependency_links=[],
 
@@ -72,6 +74,11 @@ setup(
     #     If any package contains *.txt or *.rst files, include them:
     #     '': ['*.txt', '*.xml', '*.special', '*.huh'],
     # }},
+    # package_data={
+    #     "sample1": ["anwa.png"],
+    #     "": ["*.png", "*.ico"],
+    #     "sample2": ["anwa/anwa.png"],
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
@@ -247,7 +254,7 @@ before_script:
 
 before_install:
     - sudo apt-get update
-    - sudo apt-get install -qq cmake libinsighttoolkit3-dev libpng12-dev libgdcm2-dev
+    # - sudo apt-get install -qq cmake libinsighttoolkit3-dev libpng12-dev libgdcm2-dev
     
     # - wget http://home.zcu.cz/~mjirik/lisa/install/install_conda.sh && source install_conda.sh
     - wget https://raw.githubusercontent.com/mjirik/discon/master/tools/install_conda.sh && source install_conda.sh
@@ -262,8 +269,8 @@ before_install:
     - conda config --set always_yes yes --set changeps1 no
     - conda config --add channels mjirik
     - conda config --add channels conda-forge
-    - conda config --add channels SimpleITK
-    - conda config --add channels luispedro
+    # - conda config --add channels SimpleITK
+    # - conda config --add channels luispedro
     - conda update -q conda
     # Useful for debugging any issues with conda
     - conda info -a
@@ -272,10 +279,10 @@ before_install:
 install:
 
     # - sudo apt-get install -qq $(< apt_requirements.txt)
-    - conda create --yes -n travis pip nose coveralls python=$CONDA_PYTHON_VERSION
+    - conda create --yes -n travis python=$CONDA_PYTHON_VERSION
     - source activate travis
 #    - Install dependencies
-    - conda install --yes --file requirements_conda.txt pytest-cov
+    - conda install --yes --file requirements_conda.txt pytest-cov coveralls
 #    - pip install -r requirements_pip.txt
 #    - "echo $LD_LIBRARY_PATH"
 #    - "pip install -r requirements.txt"
