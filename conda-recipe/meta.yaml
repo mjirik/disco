@@ -40,6 +40,7 @@ requirements:
     - gitpython
     - bumpversion
     - click
+    - loguru
 
   run:
     - python
@@ -49,6 +50,7 @@ requirements:
     - gitpython
     - bumpversion
     - click
+    - loguru
 
 test:
   # Python imports

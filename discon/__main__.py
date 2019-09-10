@@ -13,9 +13,9 @@ There is also option to init new project directory.
 
 """
 
-import logging
-
-logger = logging.getLogger(__name__)
+# import logging
+# logger = logging.getLogger(__name__)
+from loguru import logger
 import argparse
 import subprocess
 import os
