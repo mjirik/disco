@@ -130,7 +130,7 @@ def make(args):
 
     pythons = args.py
     if len(args.py) == 0 or (len(args.py) > 0 and args.py in ("both", "all")):
-        pythons = ["2.7", "3.6"]
+        pythons = ["3.7", "3.6"]
     logger.info("python versions " + str( args.py))
 
     for python_version in pythons:
@@ -337,11 +337,11 @@ def make_init(project_name:str, author:str, email:str, license:str,
 
 
 def main():
-    logger = logging.getLogger()
+    # logger = logging.getLogger()
 
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    logger.addHandler(ch)
+    # logger.setLevel(logging.DEBUG)
+    # ch = logging.StreamHandler()
+    # logger.addHandler(ch)
 
     # create file handler which logs even debug messages
     # fh = logging.FileHandler('log.txt')
@@ -428,10 +428,13 @@ def main():
 
 
     if args.loglevel is not None:
-        ch.setLevel(args.loglevel)
+        logger.add(level=args.loglevel)
+        logger.remove(0)
 
     if args.debug:
-        ch.setLevel(logging.DEBUG)
+        logger.add(level="DEBUG")
+        logger.remove(0)
+        # ch.setLevel(logging.DEBUG)
 
     if args.version:
         print(__version__)
