@@ -67,13 +67,19 @@ def check_git():
         logger.error("Git working directory is dirty. Clean it.")
         exit()
 
-def make(args):
+
+def get_recipe_prefix():
     if op.exists("meta.yaml"):
         # old position of recipe
-        prefix = "conda-recipe/"
-    else:
         prefix = ""
+    else:
+        prefix = "conda-recipe/"
+    return prefix
 
+def make(args):
+    prefix = get_recipe_prefix()
+
+    logger.debug(f"prefix: {prefix}")
     if not op.exists("conda-recipe"):
         import os
         os.makedirs("conda-recipe")
@@ -196,7 +202,8 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
         else:
             package_name = "."
 
-    fn_meta = Path(package_name) / "meta.yaml"
+    fn_meta = Path(get_recipe_prefix() + "meta.yaml")
+    logger.debug(f"meta.yaml path: {fn_meta}")
     noarch = check_meta_yaml_for_noarch(fn_meta)
 
     logger.debug("conda build")
