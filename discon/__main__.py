@@ -179,6 +179,15 @@ def pypi_build_and_upload(args):
     for onefile in dr:
         os.remove(onefile)
 
+def check_meta_yaml_for_noarch(fn:Path):
+    import re
+    with open(fn, "rt") as fl:
+        text = fl.read()
+
+    mo = re.match(r"\n\s*noarch_python:\s*True", text)
+    if mo:
+        logger.info("Detected conda noarch python")
+    return mo
 
 def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False):
     if package_name is None:
@@ -187,19 +196,24 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
         else:
             package_name = "."
 
+    fn_meta = Path(package_name) / "meta.yaml"
+    noarch = check_meta_yaml_for_noarch(fn_meta)
+
     logger.debug("conda build")
     logger.debug("build python_version :" + str( python_version))
     python_short_version = python_version[0] + python_version[2]
 
     # subprocess.call("conda build -c mjirik -c SimpleITK .", shell=True)
-    if python_version == "noarch":
+    # if python_version == "noarch":
+    if noarch:
         conda_build_command = ["conda", "build", package_name]
     else:
         conda_build_command = ["conda", "build", "--py", python_version,  package_name]
     for channel in channels:
         conda_build_command.append("-c")
         conda_build_command.append(channel[0])
-    if python_version == "noarch":
+    # if python_version == "noarch":
+    if noarch:
         if skip_upload:
             conda_build_command.append("--no-anaconda-upload")
         skip_upload = True
@@ -216,7 +230,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
     cmd_convert = ["conda", "convert", "-p", "all", output_name]
-    if python_version != "noarch":
+    if not noarch: # python_version != "noarch":
         logger.debug(" ".join(cmd_convert))
         mycall(cmd_convert)
 
