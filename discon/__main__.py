@@ -203,7 +203,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
             package_name = "."
 
     fn_meta = Path(get_recipe_prefix() + "meta.yaml")
-    logger.debug(f"meta.yaml path: {fn_meta}")
+    logger.debug(f"meta.yaml path: {fn_meta} exists: {fn_meta.exists()}")
     noarch = check_meta_yaml_for_noarch(fn_meta)
 
     logger.debug("conda build")
