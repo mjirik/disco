@@ -148,7 +148,8 @@ def make(args):
                 python_version,
                 args.channel,
                 package_name=package_name,
-                skip_upload=args.skip_upload
+                skip_upload=args.skip_upload,
+                arch=args.arch
             )
 
 
@@ -187,6 +188,7 @@ def pypi_build_and_upload(args):
 
 def check_meta_yaml_for_noarch(fn:Path):
     import re
+    logger.debug("Checking for noarch")
     with open(fn, "rt") as fl:
         text = fl.read()
 
@@ -195,7 +197,7 @@ def check_meta_yaml_for_noarch(fn:Path):
         logger.info("Detected conda noarch python")
     return mo
 
-def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False):
+def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False, arch="check"):
     if package_name is None:
         if op.exists("conda-recipe/meta.yaml"):
             package_name = "./conda-recipe/"
@@ -204,7 +206,14 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
 
     fn_meta = Path(get_recipe_prefix() + "meta.yaml")
     logger.debug(f"meta.yaml path: {fn_meta} exists: {fn_meta.exists()}")
-    noarch = check_meta_yaml_for_noarch(fn_meta)
+    if arch == "check":
+        noarch = check_meta_yaml_for_noarch(fn_meta)
+    elif arch == "noarch":
+        noarch = True
+    elif arch == "convert":
+        noarch = False
+    else:
+        logger.error(f"Not known parameter --arch {arch}")
 
     logger.debug("conda build")
     logger.debug("build python_version :" + str( python_version))
@@ -386,6 +395,12 @@ def main():
             # default="all",
             help="specify python version. '--py 2.7' or '--py both' for python 3.6 and 2.7. "
                  "Parameter can be used multiple times.")
+    parser.add_argument("--arch",
+                        # default="2.7",
+                        # default="both",
+                        default="check",
+                        # default="all",
+                        help="'check' (default) or 'noarch' or 'convert' ")
     parser.add_argument(
         "-c", "--channel",
         nargs=1,
