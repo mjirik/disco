@@ -208,10 +208,16 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     logger.debug(f"meta.yaml path: {fn_meta} exists: {fn_meta.exists()}")
     if arch == "check":
         noarch = check_meta_yaml_for_noarch(fn_meta)
+        convert = not noarch
     elif arch == "noarch":
         noarch = True
+        convert = False
     elif arch == "convert":
         noarch = False
+        convert = True
+    elif arch == "noconvert":
+        noarch = False
+        convert = False
     else:
         logger.error(f"Not known parameter --arch {arch}")
 
@@ -234,8 +240,9 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
             conda_build_command.append("--no-anaconda-upload")
         skip_upload = True
     else:
-        # upload in the end
-        conda_build_command.append("--no-anaconda-upload")
+        if not convert:
+            # upload in the end
+            conda_build_command.append("--no-anaconda-upload")
 
     mycall(conda_build_command, ignore_error=False)
     conda_build_command.append("--output")
@@ -246,7 +253,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     output_name = output_name_lines.split("\n")[-2]
     logger.debug("build output file: " + output_name)
     cmd_convert = ["conda", "convert", "-p", "all", output_name]
-    if not noarch: # python_version != "noarch":
+    if convert: # python_version != "noarch":
         logger.debug(" ".join(cmd_convert))
         mycall(cmd_convert)
 
@@ -400,7 +407,7 @@ def main():
                         # default="both",
                         default="check",
                         # default="all",
-                        help="'check' (default) or 'noarch' or 'convert' ")
+                        help="'check' (default) or 'noarch' or 'convert' or 'noconvert' ")
     parser.add_argument(
         "-c", "--channel",
         nargs=1,
