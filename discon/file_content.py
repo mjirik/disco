@@ -74,11 +74,11 @@ setup(
     #     If any package contains *.txt or *.rst files, include them:
     #     '': ['*.txt', '*.xml', '*.special', '*.huh'],
     # }},
-    # package_data={
+    # package_data={{
     #     "sample1": ["anwa.png"],
     #     "": ["*.png", "*.ico"],
     #     "sample2": ["anwa/anwa.png"],
-    # },
+    # }},
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
