@@ -26,7 +26,7 @@ from pathlib import Path
 from . import file_content
 from . import discon_tools
 
-__version__ = "2.7.2"
+__version__ = "2.7.3"
 
 
 def mycall(command, ignore_error=True):
