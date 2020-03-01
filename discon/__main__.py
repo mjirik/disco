@@ -24,6 +24,7 @@ import shutil
 import glob
 from pathlib import Path
 from . import file_content
+from . import discon_tools
 
 __version__ = "2.7.2"
 
@@ -186,22 +187,6 @@ def pypi_build_and_upload(args):
     for onefile in dr:
         os.remove(onefile)
 
-def check_meta_yaml_for_noarch(fn:Path):
-    import re
-    logger.debug("Checking for noarch")
-    with open(fn, "rt") as fl:
-        text = fl.read()
-
-    mo = re.match(r"\n\s*noarch_python:\s*True", text)
-    if mo:
-        logger.info("Detected conda noarch python")
-        return mo
-    mo = re.match(r"\n\s*noarch:\s*python", text)
-    if mo:
-        logger.info("Detected conda noarch python")
-        return mo
-    return mo
-
 def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False, arch="check"):
     if package_name is None:
         if op.exists("conda-recipe/meta.yaml"):
@@ -212,7 +197,7 @@ def conda_build_and_upload(python_version, channels, package_name=None, skip_upl
     fn_meta = Path(get_recipe_prefix() + "meta.yaml")
     logger.debug(f"meta.yaml path: {fn_meta} exists: {fn_meta.exists()}")
     if arch == "check":
-        noarch = check_meta_yaml_for_noarch(fn_meta)
+        noarch = discon_tools.check_meta_yaml_for_noarch(fn_meta)
         convert = not noarch
     elif arch == "noarch":
         noarch = True
@@ -458,6 +443,7 @@ def main():
     parser.add_argument(
         '--dry-run', action='store_true',
         help='Do not create any files in init')
+
     args = parser.parse_args()
 
 
