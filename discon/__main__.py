@@ -195,6 +195,11 @@ def check_meta_yaml_for_noarch(fn:Path):
     mo = re.match(r"\n\s*noarch_python:\s*True", text)
     if mo:
         logger.info("Detected conda noarch python")
+        return mo
+    mo = re.match(r"\n\s*noarch:\s*python", text)
+    if mo:
+        logger.info("Detected conda noarch python")
+        return mo
     return mo
 
 def conda_build_and_upload(python_version, channels, package_name=None, skip_upload=False, arch="check"):
