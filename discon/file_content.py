@@ -320,7 +320,8 @@ script: python -m pytest --cov={name}/
 after_success: coveralls
 """
 
-_TESTS_MAIN_PY = """\
+_TESTS_MAIN_PY = get_str_from_template_file("tests_main.py.template")
+_TESTS_MAIN_PY_OLD = """\
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
@@ -343,7 +344,9 @@ def test_answer():
     assert inc(3) == 5
 """
 
-README_MD = """\
+
+README_MD = get_str_from_template_file("readme.md.template")
+README_MD_OLD = """\
   
 [![Build Status](https://travis-ci.org/{githublogin}/{name}.svg?branch=master)](https://travis-ci.org/{githublogin}/{name})
 [![Coverage Status](https://coveralls.io/repos/github/{githublogin}/{name}/badge.svg?branch=master)](https://coveralls.io/github/{githublogin}/{name}?branch=master)
