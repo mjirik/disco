@@ -62,9 +62,13 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-    # package_data={
+    package_data={
     #     'sample': ['package_data.dat'],
-    # },
+        "meta_template": ["discon/meta.yml.template"],
+        "readme_template": ["discon/readme.md.template"],
+        "tests_main_template": ["discon/tests_main.py.template"],
+        "travis_template": ["discon/travis.yml.template"],
+    },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
