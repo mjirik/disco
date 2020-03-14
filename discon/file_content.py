@@ -1,3 +1,17 @@
+from pathlib import Path
+import os.path
+from typing import Union
+
+def get_str_from_template_file(fn:Union[Path, str]):
+    fn = Path(fn)
+    path_to_script = Path(os.path.dirname(os.path.abspath(__file__)))
+    pth = path_to_script / fn
+    data = pth.read_text()
+    # with open(pth, 'r') as myfile:
+    #     data = myfile.read()
+
+    return data
+
 _SETUP_PY = """# Fallowing command is used to upload to pipy
 #    python setup.py register sdist upload
 from setuptools import setup, find_packages
@@ -116,7 +130,8 @@ markers =
     slow: marks slow tests
 """
 
-_META_YML = """package:
+_META_YML = get_str_from_template_file("meta.yml.template")
+_META_YML_OLD = """package:
   name: {name}
   version: "0.0.0"
 
@@ -206,7 +221,8 @@ $PYTHON setup.py install
 # for a list of environment variables that are set during the build process.
 """
 
-_TRAVIS_YML="""language: python
+_TRAVIS_YML=get_str_from_template_file("travis.yml.template")
+_TRAVIS_YML_OLD="""language: python
 python: 2.7
 os: 
   - linux
@@ -339,3 +355,4 @@ README_MD = """\
 {description}
 
 """
+
