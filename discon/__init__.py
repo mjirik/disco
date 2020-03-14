@@ -1,2 +1,2 @@
 from .__main__ import main
-__version__ = "2.7.7"
+__version__ = "2.7.8"
