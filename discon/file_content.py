@@ -131,7 +131,7 @@ markers =
     slow: marks slow tests
 """
 
-_META_YML = get_str_from_template_file("meta.yml.template")
+# _META_YML = get_str_from_template_file("meta.yml.template")
 _META_YML_OLD = """package:
   name: {name}
   version: "0.0.0"
@@ -222,7 +222,7 @@ $PYTHON setup.py install
 # for a list of environment variables that are set during the build process.
 """
 
-_TRAVIS_YML=get_str_from_template_file("travis.yml.template")
+# _TRAVIS_YML=get_str_from_template_file("travis.yml.template")
 _TRAVIS_YML_OLD="""language: python
 python: 2.7
 os: 
@@ -321,7 +321,7 @@ script: python -m pytest --cov={name}/
 after_success: coveralls
 """
 
-_TESTS_MAIN_PY = get_str_from_template_file("tests_main.py.template")
+# _TESTS_MAIN_PY = get_str_from_template_file("tests_main.py.template")
 _TESTS_MAIN_PY_OLD = """\
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
@@ -346,7 +346,7 @@ def test_answer():
 """
 
 
-README_MD = get_str_from_template_file("readme.md.template")
+# README_MD = get_str_from_template_file("readme.md.template")
 README_MD_OLD = """\
   
 [![Build Status](https://travis-ci.org/{githublogin}/{name}.svg?branch=master)](https://travis-ci.org/{githublogin}/{name})

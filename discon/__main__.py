@@ -314,8 +314,8 @@ def make_init(project_name:str, author:str, email:str, license:str,
         license=license
     )
     formated_setup = file_content._SETUP_PY.format(**fmt)
-    formated_travis = file_content._TRAVIS_YML.format(**fmt)
-    formated_meta = file_content._META_YML.format(**fmt)
+    formated_travis = file_content.get_str_from_template_file("travis.tml.template").format(**fmt)
+    formated_meta = file_content.get_str_from_template_file("meta.yml.template").format(**fmt)
     if dry_run:
         print(formated_setup)
         print(formated_travis)
@@ -327,8 +327,8 @@ def make_init(project_name:str, author:str, email:str, license:str,
         create_file(Path("setup.cfg"), file_content._SETUP_CFG)
         create_file(conda_recipe_path / "meta.yaml", formated_meta)
         create_file(Path(".travis.yml"), formated_travis)
-        create_file(Path(f"tests/{project_name}_test.py"), file_content._TESTS_MAIN_PY)
-        create_file(Path("README.md"), file_content.README_MD.format(**fmt))
+        create_file(Path(f"tests/{project_name}_test.py"), file_content.get_str_from_template_file("test_main.py.template"))
+        create_file(Path("README.md"), file_content.get_str_from_template_file("readme.md.template").format(**fmt))
 
         # if not op.exists(".condarc"):
         #     with open('.condarc', 'a') as the_file:
