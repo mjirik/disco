@@ -2,6 +2,7 @@ from pathlib import Path
 import os.path
 from typing import Union
 
+
 def get_str_from_template_file(fn:Union[Path, str]):
     fn = Path(fn)
     path_to_script = Path(os.path.dirname(os.path.abspath(__file__)))
