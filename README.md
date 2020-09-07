@@ -79,4 +79,9 @@ Push your git `master` branch to `stable` branch
 # Build
 
     conda build -c conda-forge .
+    
+    
+# Twine PyPI setup 
+
+ keyring set https://upload.pypi.org/legacy/ your-username
 
