@@ -170,7 +170,7 @@ def main():
         "project_name",
         nargs='?',
         help="project directory (with setup.py) or new project name if 'init' action is used",
-        default="default_project")
+        default=None)
     parser.add_argument("--py",
             # default="2.7",
             # default="both",
