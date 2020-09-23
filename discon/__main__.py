@@ -23,115 +23,115 @@ import glob
 from pathlib import Path
 from . import file_content
 from . import discon_tools
-from .main_app import make_init, pypi_build_and_upload, init
+from .main_app import make_init, pypi_build_and_upload, init, make
 
 __version__ = "2.8.0"
 
 
-def mycall(command, ignore_error=True):
-    if type(command) is list:
-        try:
-            # subprocess.call(command)
-            subprocess.check_call(command)
-        except subprocess.CalledProcessError as e:
-            if ignore_error:
-                logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
-            else:
-                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
-    else:
-        try:
-            # subprocess.call(command, shell=True)
-            subprocess.check_call(command, shell=True)
-        except subprocess.CalledProcessError as e:
-            if ignore_error:
-                logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
-            else:
-                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
-
-
-def check_git():
-    try:
-        import git
-        import git.exc
-    except:
-        logger.info("GitPython is not installed")
-        return
-
-    try:
-        repo = git.Repo(".")
-    except git.exc.InvalidGitRepositoryError as e:
-        logger.info("It is not Git repo")
-
-
-    if repo.is_dirty():
-        logger.error("Git working directory is dirty. Clean it.")
-        exit()
-
-
-def get_recipe_prefix():
-    if op.exists("meta.yaml"):
-        # old position of recipe
-        prefix = ""
-    else:
-        prefix = "conda-recipe/"
-    return prefix
-
-def make(args):
-    prefix = get_recipe_prefix()
-
-    logger.debug(f"prefix: {prefix}")
-    if not op.exists("conda-recipe"):
-        import os
-        os.makedirs("conda-recipe")
-    if not op.exists(prefix + "build.sh"):
-        with open(prefix + 'build.sh', 'a') as the_file:
-            the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
-    if not op.exists(prefix + "bld.bat"):
-        with open(prefix + 'bld.bat', 'a') as the_file:
-            the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
-
-    check_git()
-    if (args.action == "init"):
-        init(args) #, author=args.author, email=args.email, githubuser=args.gihubuser)
-        return
-    elif (args.action == "stable"):
-        mycall("git push --tags")
-        mycall("git checkout stable")
-        mycall("git pull origin master")
-        mycall("git push")
-        mycall("git checkout master")
-        return
-    elif args.action in ["minor", "major", "patch"]:
-        if not args.skip_git:
-            logger.debug("pull, patch, push, push --tags")
-            mycall("git pull")
-        if args.skip_bumpversion:
-            logger.info("skip bumpversion")
-        else:
-            mycall("bumpversion " + args.action)
-            if not args.skip_git:
-                mycall("git push")
-                mycall("git push --tags")
-        # if args.init_project_name is "pypi":
-        #     upload_conda = False
-    elif args.action in ["stay"]:
-        logger.debug("stay on version")
-    # elif args.action in ["build_conda"]:
-    #     logger.debug("build conda based on meta.yaml")
-    #     process_pypi = False
-    elif args.action in ["skeleton"]:
-        logger.debug("building skeleton")
-        package_name = args.project_name
-        mycall(["conda", "skeleton", "pypi", package_name], ignore_error=False)
-        return
-    else:
-        logger.error("Unkown command '"+ args.action + "'")
-        return
-
-# fi
-    # upload to pypi
-    if not args.skip_pypi:
-        pypi_build_and_upload(args)
+# def mycall(command, ignore_error=True):
+#     if type(command) is list:
+#         try:
+#             # subprocess.call(command)
+#             subprocess.check_call(command)
+#         except subprocess.CalledProcessError as e:
+#             if ignore_error:
+#                 logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+#             else:
+#                 raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+#     else:
+#         try:
+#             # subprocess.call(command, shell=True)
+#             subprocess.check_call(command, shell=True)
+#         except subprocess.CalledProcessError as e:
+#             if ignore_error:
+#                 logger.warning("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+#             else:
+#                 raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+#
+#
+# def check_git():
+#     try:
+#         import git
+#         import git.exc
+#     except:
+#         logger.info("GitPython is not installed")
+#         return
+#
+#     try:
+#         repo = git.Repo(".")
+#     except git.exc.InvalidGitRepositoryError as e:
+#         logger.info("It is not Git repo")
+#
+#
+#     if repo.is_dirty():
+#         logger.error("Git working directory is dirty. Clean it.")
+#         exit()
+#
+#
+# def get_recipe_prefix():
+#     if op.exists("meta.yaml"):
+#         # old position of recipe
+#         prefix = ""
+#     else:
+#         prefix = "conda-recipe/"
+#     return prefix
+#
+# def make(args):
+#     prefix = get_recipe_prefix()
+#
+#     logger.debug(f"prefix: {prefix}")
+#     if not op.exists("conda-recipe"):
+#         import os
+#         os.makedirs("conda-recipe")
+#     if not op.exists(prefix + "build.sh"):
+#         with open(prefix + 'build.sh', 'a') as the_file:
+#             the_file.write('#!/bin/bash\n\n$PYTHON setup.py install\n')
+#     if not op.exists(prefix + "bld.bat"):
+#         with open(prefix + 'bld.bat', 'a') as the_file:
+#             the_file.write('"%PYTHON%" setup.py install\nif errorlevel 1 exit 1')
+#
+#     check_git()
+#     if (args.action == "init"):
+#         init(args) #, author=args.author, email=args.email, githubuser=args.gihubuser)
+#         return
+#     elif (args.action == "stable"):
+#         mycall("git push --tags")
+#         mycall("git checkout stable")
+#         mycall("git pull origin master")
+#         mycall("git push")
+#         mycall("git checkout master")
+#         return
+#     elif args.action in ["minor", "major", "patch"]:
+#         if not args.skip_git:
+#             logger.debug("pull, patch, push, push --tags")
+#             mycall("git pull")
+#         if args.skip_bumpversion:
+#             logger.info("skip bumpversion")
+#         else:
+#             mycall("bumpversion " + args.action)
+#             if not args.skip_git:
+#                 mycall("git push")
+#                 mycall("git push --tags")
+#         # if args.init_project_name is "pypi":
+#         #     upload_conda = False
+#     elif args.action in ["stay"]:
+#         logger.debug("stay on version")
+#     # elif args.action in ["build_conda"]:
+#     #     logger.debug("build conda based on meta.yaml")
+#     #     process_pypi = False
+#     elif args.action in ["skeleton"]:
+#         logger.debug("building skeleton")
+#         package_name = args.project_name
+#         mycall(["conda", "skeleton", "pypi", package_name], ignore_error=False)
+#         return
+#     else:
+#         logger.error("Unkown command '"+ args.action + "'")
+#         return
+#
+# # fi
+#     # upload to pypi
+#     if not args.skip_pypi:
+#         pypi_build_and_upload(args)
 
 
 from discon import main_app
