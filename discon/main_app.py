@@ -146,14 +146,20 @@ def pypi_build_and_upload(args):
         pypi_upload = False
 
     if pypi_upload:
-        logger.info("pypi upload")
+        logger.info("pypi sdist and twine upload")
         # preregistration is no longer required
         # mycall(["python", "setup.py", "register", "-r", "pypi"])
-        if args.skip_upload:
-            cmd = ["python", "setup.py", "sdist"]
-        else:
-            cmd = ["python", "setup.py", "sdist", "upload", "-r", "pypi"]
+
+        cmd = ["python", "setup.py", "sdist"]
         mycall(cmd)
+
+        if args.skip_upload:
+            pass
+            # cmd = ["python", "setup.py", "sdist"]
+        else:
+            logger.debug("using ~/.pypirc")
+            cmd = ["twine", "upload", "dist/*"]
+            mycall(cmd)
 
     # build conda and upload
     logger.debug("conda clean")
