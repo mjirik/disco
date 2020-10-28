@@ -48,6 +48,7 @@ requirements:
     - bumpversion
     - click
     - loguru
+    - twine
 
 test:
   # Python imports
