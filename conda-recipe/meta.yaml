@@ -33,9 +33,9 @@ requirements:
     - python
     - setuptools
     - conda-build
-    - anaconda-client
-    - gitpython
-    - bumpversion
+      # - anaconda-client
+      # - gitpython
+      # - bumpversion
     - click
     - loguru
 
